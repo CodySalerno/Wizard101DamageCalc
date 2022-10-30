@@ -1,5 +1,8 @@
 from tkinter import *
 import tkinter
+from tkinter import messagebox
+
+import StandardSpells
 
 
 class Entry(tkinter.Entry):  # Child class of Entry, adds default text support and 2 default binds.
@@ -62,14 +65,30 @@ def creation_per_pip():
 
 
 def creation_standard():  # creates the form for a standard spell addition
+    def submission():
+        try:
+            name = name_entry.get()
+            cost = int(cost_entry.get())
+            min_dam = int(min_dam_entry.get())
+            max_dam = int(max_dam_entry.get())
+            StandardSpells.StandardSpells(name, cost, min_dam, max_dam)
+        except ValueError:
+            mess_err = messagebox.showerror("Error", "Cost must be an integer")
+            cost_entry.focus_force()
+
     c_standard = Tk()
-    name_entry = Entry("enter name here", c_standard, width=30)
+    name_entry = Entry("name", c_standard, width=30)
     name_entry.grid(row=0, column=0)
     name_entry.focus_force()  # give this entry focus first
-    cost_entry = Entry("cost", c_standard, width=30)
+    cost_entry = Entry("cost", c_standard, width=10)
     cost_entry.grid(row=1, column=0)
-    submit_button = Button(c_standard, text="submit", state=DISABLED)  # submission, disabled till entries filled out
+    min_dam_entry = Entry("Minimum damage", c_standard, width=20)
+    min_dam_entry.grid(row=2)
+    max_dam_entry = Entry("Maximum damage", c_standard, width=20)
+    max_dam_entry.grid(row=3)
+    submit_button = Button(c_standard, text="submit", state=DISABLED, command=submission)  # submission, disabled till entries filled out
     submit_button.grid(row=2, column=0)
+
 
 
 if __name__ == '__main__':
