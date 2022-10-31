@@ -10,13 +10,10 @@ def creation():  # creates the form for choosing what type of spell
     checker.focus_force()  # set this window to focus
     w.Entry(default_text="Name", master=checker).grid(row=0)  # entry box for name of spell to check
     spell_type = IntVar(master=checker, value=3)  # variable for which spell radio button is checked
-    w.Radio(master=checker, text="Standard spell", variable=spell_type, value=1).grid(row=1)
+    Radiobutton(master=checker, text="Standard spell", variable=spell_type, value=1).grid(row=1)
     # ^standard spell radio button
-    x = w.Radio(master=checker, text="Per pip spell", variable=spell_type, value=2)
-    x.grid(row=2)
-
+    Radiobutton(master=checker, text="Per pip spell", variable=spell_type, value=2).grid(row=2)
     # ^per pip spell radio button
-    w.Button(radio_val=spell_type.get(), master=checker, text="Submit", state=DISABLED, command=submission).grid(row=4)
+    w.Button(radio_var=spell_type, master=checker, text="Submit", state=DISABLED, command=submission).grid(row=4)
     # ^button to click when ready to submit
-
     checker.mainloop()
