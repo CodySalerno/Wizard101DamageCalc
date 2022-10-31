@@ -14,7 +14,6 @@ def creation():  # creates the form for choosing what type of spell
     # ^standard spell radio button
     Radiobutton(master=checker, text="Per pip spell", variable=spell_type, value=2).grid(row=2)
     # ^per pip spell radio button
-    w.Button(master=checker, text="Submit", state=DISABLED, command=submission).grid(row=4)
+    w.Button(radio_var=spell_type, master=checker, text="Submit", state=DISABLED, command=submission).grid(row=4)
     # ^button to click when ready to submit
-
     checker.mainloop()
