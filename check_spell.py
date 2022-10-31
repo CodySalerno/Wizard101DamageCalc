@@ -1,14 +1,30 @@
 from tkinter import *
 import widgets as w
+from tkinter import messagebox
+import StandardSpells as SS
 
 
 def creation():  # creates the form for choosing what type of spell
     def submission():
-        pass
+        name = name_entry.get()
+        if spell_type.get() == 1:
+            stats = SS.StandardSpells.read_pickle_file(name=name, spell_type='standard')
+            if stats:
+                messagebox.showinfo(name, "Cost: " + str(stats['standard']['cost']) + "\n"
+                                    "minimum damage: " + str(stats['standard']['min_dam']) + "\n"
+                                    "maximum damage: " + str(stats['standard']['max_dam']))
+            else:
+                messagebox.showwarning("missing spell", "No standard spell was found with this name.")
+        elif spell_type.get() == 2:
+            stats = SS.StandardSpells.read_pickle_file(name=name, spell_type='per_pip')
+        else:
+            messagebox.showerror("Unreachable", "This messagebox shouldn't have been reachable.\n"
+                                                "Please contact us with steps on how to reproduce this error box.")
     checker = Tk()
     checker.title("spell checker")
     checker.focus_force()  # set this window to focus
-    w.Entry(default_text="Name", master=checker).grid(row=0)  # entry box for name of spell to check
+    name_entry = w.Entry(default_text="Name", master=checker)
+    name_entry.grid(row=0)  # entry box for name of spell to check
     spell_type = IntVar(master=checker, value=3)  # variable for which spell radio button is checked
     Radiobutton(master=checker, text="Standard spell", variable=spell_type, value=1).grid(row=1)
     # ^standard spell radio button

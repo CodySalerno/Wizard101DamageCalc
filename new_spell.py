@@ -31,7 +31,7 @@ def creation_standard():  # creates the form for a standard spell addition
             state += 1
             if min_dam >= max_dam:
                 raise ValueError  # error value of 3
-            StandardSpells.StandardSpells(name, cost, min_dam, max_dam)
+            StandardSpells.StandardSpells("standard", name, cost, min_dam, max_dam)
         except ValueError:
             match state:
                 case 0:
