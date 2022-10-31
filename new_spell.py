@@ -36,14 +36,15 @@ class Button(tkinter.Button):  # Child class of Button
     # adds support for easily enabling button if all entry widgets filled out
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.bind("<Enter>", lambda event: self.on_enter(event))
-        # ^ adds a bind for whenever you hover the button to check entry widgets
+        self.bind("<Enter>", lambda event: self.on_enter())
+        # ^adds a bind for whenever you hover the button to check entry widgets
+        # ^lambda has to take in argument but isn't needed in on_enter function
 
-    def on_enter(self, e):  # checks whenever you hover the button if all entries have added information
+    def on_enter(self):
         passed = True  # flag
-        for widget in self.master.winfo_children():  # iterates through sibling widgets
-            if widget.winfo_class() == "Entry":  # checks if class is entry (add text)
-                if widget.get() == widget.default_text or widget.get() == "":  # if default text or blank text
+        for widgets in self.master.winfo_children():  # iterates through sibling widgets
+            if widgets.winfo_class() == "Entry":  # checks if class is entry (add text)
+                if widgets.get() == widgets.default_text or widgets.get() == "":  # if default text or blank text
                     passed = False  # trigger flag
                     break  # no need to continue iterations
         if passed:  # if flag not triggered
