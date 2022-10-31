@@ -91,6 +91,7 @@ def creation_standard():  # creates the form for a standard spell addition
                     max_dam_entry.focus_force()
                 case 3:
                     messagebox.showerror("Error", "Minimum damage must be less than maximum damage")
+                    min_dam_entry.focus_force()
 
     c_standard = Tk()
     name_entry = Entry("name", c_standard, width=30)
