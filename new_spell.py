@@ -1,5 +1,4 @@
 from tkinter import *
-import tkinter
 from tkinter import messagebox
 import StandardSpells
 import widgets as w
