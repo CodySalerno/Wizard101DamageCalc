@@ -1,5 +1,4 @@
 from tkinter import *
-import tkinter
 from tkinter import messagebox
 import StandardSpells
 import widgets as w
@@ -10,7 +9,6 @@ def creation():  # creates the form for choosing what type of spell
     creator.title("Select a spell type")
     creator.focus_force()  # set this window to focus
     w.Button(master=creator, text="Standard", command=creation_standard).grid(row=0, column=0)
-    print('why does this work')
     w.Button(master=creator, text="Per Pip", command=creation_per_pip).grid(row=1, column=0)
     creator.mainloop()
 

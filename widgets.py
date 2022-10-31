@@ -41,9 +41,7 @@ class Button(tkinter.Button):  # Child class of Button
         entry_passed = True  # flag
         for widgets in self.master.winfo_children():  # iterates through sibling widgets
             if widgets.winfo_class() == "Entry":  # checks if class is entry (add text)
-                print('entry')
                 if widgets.get() == widgets.default_text or widgets.get() == "":  # if default text or blank text
-                    print('entry flag bad')
                     entry_passed = False  # trigger flag
                     break  # no need to continue iterations
         if entry_passed:  # if flag not triggered
