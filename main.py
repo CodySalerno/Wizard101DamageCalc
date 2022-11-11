@@ -19,10 +19,10 @@ def check_spells():
 
 
 calcButton = Button(master=root, text="Calculator", command=calculate)
-calcButton.grid(row=0, column=0)
+calcButton.grid(row=0)
 spellButton = Button(master=root, text="Add new spell", command=create_new)
-spellButton.grid(row=1, column=0)
+spellButton.grid(row=1)
 checkButton = Button(master=root, text="See created spells", command=check_spells)
-checkButton.grid(row=2, column=0)
+checkButton.grid(row=2)
 
 root.mainloop()

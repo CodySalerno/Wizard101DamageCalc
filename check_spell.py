@@ -1,14 +1,14 @@
 from tkinter import *
 import widgets as w
 from tkinter import messagebox
-import StandardSpells as SS
+import StandardSpells as StS
 
 
 def creation():  # creates the form for choosing what type of spell
     def submission():
         name = name_entry.get()
         if spell_type.get() == 1:
-            stats = SS.StandardSpells.read_pickle_file(name=name, spell_type='standard')
+            stats = StS.StandardSpells.read_pickle_file(name=name, spell_type='standard')
             if stats:
                 messagebox.showinfo(name, "Cost: " + str(stats['standard']['cost']) + "\n"
                                     "minimum damage: " + str(stats['standard']['min_dam']) + "\n"
@@ -16,7 +16,9 @@ def creation():  # creates the form for choosing what type of spell
             else:
                 messagebox.showwarning("missing spell", "No standard spell was found with this name.")
         elif spell_type.get() == 2:
-            stats = SS.StandardSpells.read_pickle_file(name=name, spell_type='per_pip')
+            stats = StS.StandardSpells.read_pickle_file(name=name, spell_type='per_pip')
+            if stats:
+                messagebox.showinfo(name, "Multiplier: " + str(stats['per pip']['multiplier']))
         else:
             messagebox.showerror("Unreachable", "This messagebox shouldn't have been reachable.\n"
                                                 "Please contact us with steps on how to reproduce this error box.")
