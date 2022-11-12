@@ -67,8 +67,8 @@ class StandardSpells:
             for obj in unpickled_objs:
                 pickle.dump(obj, pickle_file)
 
-    @staticmethod
-    def read_pickle_file(file="%APPDATA%/Wiz101Calc/StandardSpells.pickle",  name=None, spell_type='standard'):
+
+    def read_pickle_file(self, file="%APPDATA%/Wiz101Calc/StandardSpells.pickle",  name=None, spell_type='standard'):
         all_obj = []
         file = os.path.expandvars(file)
         with open(file, 'rb') as pickle_file:
@@ -111,21 +111,22 @@ if __name__ == '__main__':
     StandardSpells('standard', 'asdf', 1, 2, 3)
     StandardSpells.read_pickle_file(file)
     print('FIRST SUBMISSION DONE')
-    StandardSpells('standard', 'asdf', 2, 4, 8)
-    StandardSpells.read_pickle_file(file)
-    print('SECOND SUBMISSION DONE')
+    #StandardSpells('standard', 'asdf', 2, 4, 8)
+    #StandardSpells.read_pickle_file(file)
+    #print('SECOND SUBMISSION DONE')
     StandardSpells('standard', 'qwer', 3, 6, 9)
     StandardSpells.read_pickle_file(file)
     print('THIRD SUBMISSION DONE')
-    StandardSpells('standard', 'asdf', 100, 700, 230000)
-    StandardSpells.read_pickle_file(file)
-    print('FORTH SUBMISSION DONE')
-    StandardSpells('standard', 'qwer', 6, 8, 10)
-    StandardSpells.read_pickle_file(file)
-    print('Fifth SUBMISSION DONE')
+    #StandardSpells('standard', 'asdf', 100, 700, 230000)
+    #StandardSpells.read_pickle_file(file)
+    #print('FORTH SUBMISSION DONE')
+    #StandardSpells('standard', 'qwer', 6, 8, 10)
+    #StandardSpells.read_pickle_file(file)
+    #print('Fifth SUBMISSION DONE')
     StandardSpells('standard', 'asdfasdf', 1, 2, 6)
     StandardSpells.read_pickle_file(file)
     print('sixth')
     StandardSpells('standard', 'zxcv', 1, 4, 7)
     StandardSpells.read_pickle_file(file)
     print('seventh')
+
