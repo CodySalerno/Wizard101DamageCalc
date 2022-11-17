@@ -45,7 +45,6 @@ class Button(tkinter.Button):  # Child class of Button
         # ^lambda has to take in argument but isn't needed in on_enter function
 
     def on_enter(self, default_radio):
-        print("def rad " + str(default_radio))
         entry_passed = True  # flag
         if default_radio == -1:
             radio_pass = True
@@ -53,16 +52,11 @@ class Button(tkinter.Button):  # Child class of Button
             radio_pass = False
         for widgets in self.master.winfo_children():  # iterates through sibling widgets
             if widgets.winfo_class() == "Entry":  # checks if class is entry (add text)
-                print('entry')
                 if widgets.get() == widgets.default_text or widgets.get() == "":  # if default text or blank text
-                    print('entry flag bad')
                     entry_passed = False  # trigger flag
                     break  # no need to continue iterations
         if default_radio != -1:  # checks if class is radio button
-            print('def radio not -1')
-            print(self.radio_var.get())
             if self.radio_var.get() != default_radio:
-                print('radio flag good')
                 radio_pass = True
         if entry_passed and radio_pass:  # if flag not triggered
             self["state"] = "normal"  # sets button to be clickable

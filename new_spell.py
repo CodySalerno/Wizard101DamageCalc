@@ -10,7 +10,6 @@ def creation():  # creates the form for choosing what type of spell
     creator.title("Select a spell type")
     creator.focus_force()  # set this window to focus
     w.Button(master=creator, text="Standard", command=creation_standard).grid(row=0)
-    print('why does this work')
     w.Button(master=creator, text="Per Pip", command=creation_per_pip).grid(row=1)
     creator.mainloop()
 
@@ -81,7 +80,6 @@ def creation_standard():  # creates the form for a standard spell addition
     max_dam_entry.grid(row=3)
     submit_button = w.Button(master=c_standard, text="submit", state=DISABLED, command=submission)
     submit_button.grid(row=4)  # ^submission disabled till entries filled out
-
 
 
 if __name__ == '__main__':

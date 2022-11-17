@@ -3,6 +3,7 @@ class GenericSpells:
         self.dict = {}
         self.name = name
         self.type = spell_type
+        self.dict["Name"] = self.name
         self.dict["Type"] = self.type
 
     def __repr__(self):
