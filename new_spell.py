@@ -21,10 +21,10 @@ def creation_per_pip():
     def submission():
         try:
             name = name_entry.get()
-            multiplier = int(multiplier_entry.get())
+            multiplier = float(multiplier_entry.get())
             MpS.MultiplierSpells(name, multiplier)
         except ValueError:
-            messagebox.showerror("Error", "Multiplier must be an integer")
+            messagebox.showerror("Error", "Multiplier must be a number")
 
     c_pip = Tk()
     name_entry = w.Entry("name", master=c_pip, width=30)
@@ -126,7 +126,7 @@ def creation_flat_blade():
             cost = int(cost_entry.get())
             state = 1
             flat = int(flat_entry.get())
-            FlatB.FlatBuff(name, cost, flat)
+            FlatB.FlatBuff(name, cost, flat, True)
         except ValueError:
             if state == 0:
                 messagebox.showerror("Error", "Cost must be an integer.")
@@ -134,6 +134,7 @@ def creation_flat_blade():
             else:
                 messagebox.showerror("Error", "Flat buff must be an integer.")
                 flat_entry.focus_force()
+
     c_flat = Tk()
     name_entry = w.Entry("name", master=c_flat, width=30)
     name_entry.grid(row=0)

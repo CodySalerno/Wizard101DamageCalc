@@ -1,5 +1,5 @@
 class GenericSpells:
-    def __init__(self, name, spell_type):
+    def __init__(self, name: str, spell_type: str):
         self.dict = {}
         self.name = name
         self.type = spell_type
