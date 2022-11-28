@@ -3,6 +3,7 @@ from tkinter import messagebox
 import StandardSpells as StS
 import MultiplierSpells as MpS
 import PercentBuff as PerB
+import FlatBuff as FlatB
 import widgets as w
 
 
@@ -118,7 +119,30 @@ def creation_percent_blade():
 
 
 def creation_flat_blade():
-    pass
+    def submission():
+        state = 0
+        try:
+            name = name_entry.get()
+            cost = int(cost_entry.get())
+            state = 1
+            flat = int(flat_entry.get())
+            FlatB.FlatBuff(name, cost, flat)
+        except ValueError:
+            if state == 0:
+                messagebox.showerror("Error", "Cost must be an integer.")
+                cost_entry.focus_force()
+            else:
+                messagebox.showerror("Error", "Flat buff must be an integer.")
+                flat_entry.focus_force()
+    c_flat = Tk()
+    name_entry = w.Entry("name", master=c_flat, width=30)
+    name_entry.grid(row=0)
+    cost_entry = w.Entry("cost", master=c_flat, width=30)
+    cost_entry.grid(row=1)
+    flat_entry = w.Entry("flat buff", master=c_flat, width=30)
+    flat_entry.grid(row=2)
+    submit_button = w.Button(master=c_flat, text="submit", state=DISABLED, command=submission)
+    submit_button.grid(row=3)
 
 
 if __name__ == '__main__':
