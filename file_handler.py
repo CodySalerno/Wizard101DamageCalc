@@ -2,19 +2,20 @@ import os
 import pickle
 from StandardSpells import StandardSpells
 from MultiplierSpells import MultiplierSpells
+from PercentBuff import PercentBuff
 from tkinter import messagebox
 
 std_dir = "%APPDATA%/Wiz101Calc"
 std_dir = os.path.expandvars(std_dir)
-std_file = "%APPDATA%/Wiz101Calc/StandardSpells.pickle"
+std_file = "%APPDATA%/Wiz101Calc/AllSpells.pickle"
 std_file = os.path.expandvars(std_file)
 
 
-def create_file(direc="%APPDATA%/Wiz101Calc", file="%APPDATA%/Wiz101Calc/StandardSpells.pickle"):
+def create_file(direc=std_dir, file=std_file):
     """Creates a file at the specified directory and file if it doesn't already exist."""
     direc = os.path.expandvars(direc)
     file = os.path.expandvars(file)
-    if not os.path.exists(file):  # if directory doesn't exist
+    if not os.path.exists(direc):  # if directory doesn't exist
         os.mkdir(direc)  # create directory
     if not os.path.exists(file):
         open(file, 'w').close()
@@ -56,7 +57,8 @@ def get_all_spells(direc=std_dir, file=std_file):
         return all_spells
 
 
-def search_for_spell(name: str, direc=std_dir, file=std_file) -> StandardSpells | MultiplierSpells | None:
+def search_for_spell(name: str, direc=std_dir, file=std_file)\
+                     -> StandardSpells | MultiplierSpells | PercentBuff | None:
     """Searches file for spell with name provided. If found returns the spell, otherwise returns None."""
     try:
         with open(file, 'rb') as pickle_file:
@@ -73,7 +75,8 @@ def search_for_spell(name: str, direc=std_dir, file=std_file) -> StandardSpells 
         return None
 
 
-def update_confirm(new_spell: StandardSpells | MultiplierSpells, old_spell: StandardSpells | MultiplierSpells, file=std_file):
+def update_confirm(new_spell: StandardSpells | MultiplierSpells | PercentBuff,
+                   old_spell: StandardSpells | MultiplierSpells | PercentBuff, file=std_file):
     if new_spell.dict == old_spell.dict:
         messagebox.showinfo("Same spell", "This spell is already in your file with these stats.")
         return False

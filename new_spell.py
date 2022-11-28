@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import StandardSpells as StS
 import MultiplierSpells as MpS
+import PercentBuff as PerB
 import widgets as w
 
 
@@ -11,6 +12,7 @@ def creation():  # creates the form for choosing what type of spell
     creator.focus_force()  # set this window to focus
     w.Button(master=creator, text="Standard", command=creation_standard).grid(row=0)
     w.Button(master=creator, text="Per Pip", command=creation_per_pip).grid(row=1)
+    w.Button(master=creator, text="Percent Buff", command=creation_percent_blade).grid(row=2)
     creator.mainloop()
 
 
@@ -80,6 +82,43 @@ def creation_standard():  # creates the form for a standard spell addition
     max_dam_entry.grid(row=3)
     submit_button = w.Button(master=c_standard, text="submit", state=DISABLED, command=submission)
     submit_button.grid(row=4)  # ^submission disabled till entries filled out
+
+
+def creation_percent_blade():
+    def submission():
+        state = 0
+        try:
+            name = name_entry.get()
+            cost = int(cost_entry.get())
+            state = 1
+            percent = int(percent_entry.get())
+            state = 2
+            if percent < 1 or percent > 100:
+                raise ValueError
+            PerB.PercentBuff(name, cost, percent)
+        except ValueError:
+            if state == 0:
+                messagebox.showerror("Error", "Cost must be an integer.")
+                cost_entry.focus_force()
+            elif state == 1:
+                messagebox.showerror("Error", "Percent buff must be an integer.")
+                percent_entry.focus_force()
+            else:
+                messagebox.showerror("Error", "percent buff must be between 1% and 100%")
+                percent_entry.focus_force()
+    c_percent = Tk()
+    name_entry = w.Entry("name", master=c_percent, width=30)
+    name_entry.grid(row=0)
+    cost_entry = w.Entry(default_text="cost", master=c_percent, width=30)
+    cost_entry.grid(row=1)
+    percent_entry = w.Entry("percent buff", master=c_percent, width=30)
+    percent_entry.grid(row=2)
+    submit_button = w.Button(master=c_percent, text="submit", state=DISABLED, command=submission)
+    submit_button.grid(row=3)
+
+
+def creation_flat_blade():
+    pass
 
 
 if __name__ == '__main__':
