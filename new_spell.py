@@ -22,7 +22,11 @@ def creation_per_pip():
         try:
             name = name_entry.get()
             multiplier = float(multiplier_entry.get())
-            MpS.MultiplierSpells(name, multiplier)
+            if targets.get() == 1:
+                multi_target = False
+            else:
+                multi_target = True
+            MpS.MultiplierSpells(name, multi_target, multiplier)
         except ValueError:
             messagebox.showerror("Error", "Multiplier must be a number")
 
@@ -34,7 +38,12 @@ def creation_per_pip():
     multiplier_entry = w.Entry("Damage per pip", master=c_pip, width=30)
     # entry widget for the multiplier of spell
     multiplier_entry.grid(row=1)
-    w.Button(master=c_pip, text="submit", state=DISABLED, command=submission).grid(row=2)
+    targets = IntVar(master=c_pip, value=3)  # variable for how many targets radio button is checked
+    Radiobutton(master=c_pip, text="Single Target", variable=targets, value=1).grid(row=2)
+    # ^single target radio button
+    Radiobutton(master=c_pip, text="Multiple Targets", variable=targets, value=2).grid(row=3)
+    # ^multi target radio button
+    w.Button(radio_var=targets, master=c_pip, text="Submit", state=DISABLED, command=submission).grid(row=4)
     # button widget for submitting the spell
 
 
@@ -51,7 +60,12 @@ def creation_standard():  # creates the form for a standard spell addition
             state += 1
             if min_dam >= max_dam:
                 raise ValueError  # error value of 3
-            StS.StandardSpells(name, cost, min_dam, max_dam)
+            if targets.get() == 1:
+                multi_target = False
+            else:
+                multi_target = True
+
+            StS.StandardSpells(name, cost, multi_target, min_dam, max_dam)
         except ValueError:
             match state:
                 case 0:
@@ -81,8 +95,14 @@ def creation_standard():  # creates the form for a standard spell addition
     max_dam_entry = w.Entry(default_text="Maximum damage", master=c_standard, width=30)
     # entry widget for maximum damage of spell
     max_dam_entry.grid(row=3)
+    targets = IntVar(master=c_standard, value=3)  # variable for how many targets radio button is checked
+    Radiobutton(master=c_standard, text="Single Target", variable=targets, value=1).grid(row=4)
+    # ^single target radio button
+    Radiobutton(master=c_standard, text="Multiple Targets", variable=targets, value=2).grid(row=5)
+    # ^multi target radio button
     submit_button = w.Button(master=c_standard, text="submit", state=DISABLED, command=submission)
-    submit_button.grid(row=4)  # ^submission disabled till entries filled out
+    # ^submission disabled till entries filled out
+    submit_button.grid(row=6)
 
 
 def creation_percent_blade():
@@ -96,7 +116,11 @@ def creation_percent_blade():
             state = 2
             if percent < 1 or percent > 100:
                 raise ValueError
-            PerB.PercentBuff(name, cost, percent)
+            if targets.get() == 1:
+                multi_target = False
+            else:
+                multi_target = True
+            PerB.PercentBuff(name, cost, multi_target, percent)
         except ValueError:
             if state == 0:
                 messagebox.showerror("Error", "Cost must be an integer.")
@@ -112,10 +136,15 @@ def creation_percent_blade():
     name_entry.grid(row=0)
     cost_entry = w.Entry(default_text="cost", master=c_percent, width=30)
     cost_entry.grid(row=1)
+    targets = IntVar(master=c_percent, value=3)  # variable for how many targets radio button is checked
+    Radiobutton(master=c_percent, text="Single Target", variable=targets, value=1).grid(row=2)
+    # ^single target radio button
+    Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=3)
+    # ^multi target radio button
     percent_entry = w.Entry("percent buff", master=c_percent, width=30)
-    percent_entry.grid(row=2)
+    percent_entry.grid(row=4)
     submit_button = w.Button(master=c_percent, text="submit", state=DISABLED, command=submission)
-    submit_button.grid(row=3)
+    submit_button.grid(row=5)
 
 
 def creation_flat_blade():
@@ -126,7 +155,11 @@ def creation_flat_blade():
             cost = int(cost_entry.get())
             state = 1
             flat = int(flat_entry.get())
-            FlatB.FlatBuff(name, cost, flat, True)
+            if targets.get() == 1:
+                multi_target = False
+            else:
+                multi_target = True
+            FlatB.FlatBuff(name, cost, multi_target, flat)
         except ValueError:
             if state == 0:
                 messagebox.showerror("Error", "Cost must be an integer.")
@@ -140,10 +173,15 @@ def creation_flat_blade():
     name_entry.grid(row=0)
     cost_entry = w.Entry("cost", master=c_flat, width=30)
     cost_entry.grid(row=1)
+    targets = IntVar(master=c_flat, value=3)  # variable for how many targets radio button is checked
+    Radiobutton(master=c_flat, text="Single Target", variable=targets, value=1).grid(row=2)
+    # ^single target radio button
+    Radiobutton(master=c_flat, text="Multiple Targets", variable=targets, value=2).grid(row=3)
+    # ^multi target radio button
     flat_entry = w.Entry("flat buff", master=c_flat, width=30)
-    flat_entry.grid(row=2)
+    flat_entry.grid(row=4)
     submit_button = w.Button(master=c_flat, text="submit", state=DISABLED, command=submission)
-    submit_button.grid(row=3)
+    submit_button.grid(row=5)
 
 
 if __name__ == '__main__':
