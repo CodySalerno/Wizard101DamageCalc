@@ -136,13 +136,13 @@ def creation_percent_blade():
     name_entry.grid(row=0)
     cost_entry = w.Entry(default_text="cost", master=c_percent, width=30)
     cost_entry.grid(row=1)
-    targets = IntVar(master=c_percent, value=3)  # variable for how many targets radio button is checked
-    Radiobutton(master=c_percent, text="Single Target", variable=targets, value=1).grid(row=2)
-    # ^single target radio button
-    Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=3)
-    # ^multi target radio button
     percent_entry = w.Entry("percent buff", master=c_percent, width=30)
-    percent_entry.grid(row=4)
+    percent_entry.grid(row=2)
+    targets = IntVar(master=c_percent, value=3)  # variable for how many targets radio button is checked
+    Radiobutton(master=c_percent, text="Single Target", variable=targets, value=1).grid(row=3)
+    # ^single target radio button
+    Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=4)
+    # ^multi target radio button
     submit_button = w.Button(master=c_percent, text="submit", state=DISABLED, command=submission)
     submit_button.grid(row=5)
 

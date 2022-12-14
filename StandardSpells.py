@@ -2,6 +2,12 @@ from GenericSpells import GenericSpells as Gs
 
 
 class StandardSpells(Gs):
+    """Standard damage spells. Child class of the generic spells.
+    needs a name (str),
+    cost (int)
+    whether it applies to all enemies(true) or just one enemy (false)
+    minimum damage dealt (int),
+    and maximum damage dealt (int)"""
     def __init__(self, name: str, cost: int, multi_target: bool, min_dam: int, max_dam: int):
         from file_handler import add_to_file
         super().__init__(spell_type="Standard", name=name)

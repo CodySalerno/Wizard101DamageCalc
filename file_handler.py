@@ -37,20 +37,34 @@ def add_to_file(spell, direc=std_dir, file=std_file):
             add_to_file(spell, direc, file)
 
 
-def get_all_spells(direc=std_dir, file=std_file):
+def get_all_spells(direc=std_dir, file=std_file, return_list = False):
     """Returns all spells found in file as a list with 2 indexes.
     The first index is standard spells the second is per pip spells."""
-    all_spells = [{}, {}]
+    all_spells = [{}, {}, {}, {}]
     try:
         with open(file, 'rb') as pickle_file:
             pickle_file.seek(0)
+            last = -1
             while True:
                 try:
                     curr_spell = pickle.load(pickle_file)
-                    if curr_spell.dict["Type"] == "Standard":
-                        all_spells[0][curr_spell.name] = curr_spell.dict
-                    elif curr_spell.dict["Type"] == "Multiplier":
-                        all_spells[1][curr_spell.name] = curr_spell.dict
+                    if curr_spell.type == "Standard":
+                        all_spells[0][curr_spell.name] = curr_spell
+                        last = 0
+                    elif curr_spell.type == "Multiplier":
+                        all_spells[1][curr_spell.name] = curr_spell
+                        last = 1
+                    elif curr_spell.type == "Percent Buff":
+                        all_spells[2][curr_spell.name] = curr_spell
+                        last = 2
+                    elif curr_spell.type == "Flat Buff":
+                        all_spells[3][curr_spell.name] = curr_spell
+                        last = 3
+                    else:
+                        raise ValueError
+                except ValueError:
+                    print("unknown type")
+                    exit(2)
                 except EOFError:
                     return all_spells
     except FileNotFoundError:
