@@ -20,11 +20,33 @@ def create_buff_and_spell_lists():
         percent_buffs.append(value)
     for key, value in all_spells[3].items():  # makes a list of objects of type FlatBuffs
         flat_buffs.append(value)
-    all_buffs = percent_buffs + flat_buffs  # combines the two buff type lists
-    all_attacks: tuple[list[StandardS.StandardSpells], list[MultiS.MultiplierSpells]] = \
-        standard_spells, multiplier_spells  # creates a tuple of two lists
+    all_buffs: list[FlatB.FlatBuff | PercB.PercentBuff] = []
+    for i in percent_buffs:
+        all_buffs.append(i)
+    for i in flat_buffs:
+        all_buffs.append(i)
+    # adds all flat and percent buffs to one list
+    # instead could do below but leads to type hinting warning
+    # all_buffs = percent_buffs + flat_buffs
+    all_attacks: list[StandardS.StandardSpells | MultiS.MultiplierSpells] = []
+    for i in standard_spells:
+        all_attacks.append(i)
+    for i in multiplier_spells:
+        all_attacks.append(i)
+    # adds all Standard spells and Multiplier Spells to one list
+    # instead could do below but leads to type hinting warning
+    # all_attacks = standard_spells + multiplier_spells
     buff_combos = more_itertools.powerset(all_buffs)  # creates every combination of buffs possible
-    calculated_buffs = []
+    """buff_combos is the a collection of every way to combine each of the buffs.
+    this collection isn't usable and so quickly gets turned into a list of each combination with some formatting done
+    through the calculate_buff() method that makes the list more usable."""
+    calculated_buffs: list[tuple[float, int, list[str], int]] = []
+    """calculated_buffs is a list of tuples, each tuple is one combination of buffs.
+    In order the tuple represents:
+    Damage multiplier,
+    Flat damage increase, 
+    List of the names of the buffs in the combination,
+    Total cost of all buffs in the combination"""
     for buff_set in buff_combos:  # iterates through each combination of buffs
         calculated_buffs.append(calculate_buff(buff_set))
         # ^turns the combination of buff spells into a tuple of their combined stats and puts it in a list
@@ -52,16 +74,48 @@ def calculate_buff(buff_combo):
 
 
 def calculate_everything(calculated_buffs: list[tuple[float, int, list[str], int]],
-                         damage_spells: tuple[list[StandardS.StandardSpells], list[MultiS.MultiplierSpells]]):
-    """Calculated buffs is a list of tuples with the values in order multiplier, flatt buff, names, cost"""
-    for spell in damage_spells[0]:  # iterates through all standard spells
-        for buff_set in calculated_buffs:  # iterates through every combination of buffs
-            min_dam = spell.min_dam * buff_set[0] + buff_set[1]
-            max_dam = spell.max_dam * buff_set[0] + buff_set[1]
-            cost = spell.cost + buff_set[3]
-    for spell in damage_spells[1]:  # iterates through all multiplier spells
-        for buff_set in calculated_buffs:  # iterates through every combination of buffs
-            pass
+                         damage_spells: list[StandardS.StandardSpells | MultiS.MultiplierSpells]):
+    """Calculated buffs is a list of tuples with the values in order multiplier, flatt buff, names, cost
+    damage spells is a list of all the spells of type StandardSpells or MultiplierSpells."""
+    standard_finished: list[tuple[float, float, list[str], int]] = []
+    """standard_finished is a list of the standard spells after they've been combined with buffs.
+    There should be duplicates of spells because they will have different stats since they've been combined
+    with different buffs."""
+    multiplier_finished = []
+    for spell in damage_spells:  # iterates through all damage spells
+        if type(spell) == StandardS.StandardSpells:
+            for buff_set in calculated_buffs:  # iterates through every combination of buffs
+                min_dam: float = spell.min_dam * buff_set[0] + buff_set[1]
+                max_dam: float = spell.max_dam * buff_set[1] + buff_set[1]
+                names: list[str] = []
+                for name in buff_set[2]:
+                    names.append(name)
+                names.append(spell.name)
+                cost: int = spell.cost + buff_set[3]
+                stats = (min_dam, max_dam, names, cost)
+                standard_finished.append(stats)
+
+        elif type(spell) == MultiS.MultiplierSpells:
+            for buff_set in calculated_buffs:  # iterates through every combination of buffs
+                boosted_damage: float = spell.multiplier * buff_set[0]
+                flat_buff: int = buff_set[1]
+                names: list[str] = []
+                for name in buff_set[2]:
+                    names.append(name)
+                names.append(spell.name)
+                cost: int = buff_set[3]
+                combined_spell = (boosted_damage, flat_buff, names, cost)
+                multiplier_finished.append(combined_spell)
+    # Have now looped through every spell with every combination of buffs and put them into two lists.
+    return standard_finished, multiplier_finished
 
 
-print(create_buff_and_spell_lists())
+def main():
+    buffs, spells = create_buff_and_spell_lists()
+    # buffs is a list of tuples containing in order: multiplier, flat buff, names of spells in that combo, total cost.
+    # spells is a list of all the spells of the StandardSpells and MultiplierSpells types.
+    standard_done, multiplier_done = calculate_everything(buffs, spells)
+    print("standard")
+    print(standard_done)
+    print("multiplier")
+    print(multiplier_done)

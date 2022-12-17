@@ -1,10 +1,11 @@
 from tkinter import *
 import new_spell
 import check_spell
+import calculate as calc
 
 
 def calculate():
-    pass
+    calc.main()
 
 
 def create_new():
