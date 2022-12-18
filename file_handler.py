@@ -37,29 +37,25 @@ def add_to_file(spell, direc=std_dir, file=std_file):
             add_to_file(spell, direc, file)
 
 
-def get_all_spells(direc=std_dir, file=std_file, return_list = False):
+def get_all_spells(direc=std_dir, file=std_file):
     """Returns all spells found in file as a list with 2 indexes.
-    The first index is standard spells the second is per pip spells."""
+    The 0th index is standard damage spells the 1st is per pip damage spells.
+    The 2nd index id percent buff spells and the 3rd index is flat buff spells. """
     all_spells = [{}, {}, {}, {}]
     try:
         with open(file, 'rb') as pickle_file:
             pickle_file.seek(0)
-            last = -1
             while True:
                 try:
                     curr_spell = pickle.load(pickle_file)
                     if curr_spell.type == "Standard":
                         all_spells[0][curr_spell.name] = curr_spell
-                        last = 0
                     elif curr_spell.type == "Multiplier":
                         all_spells[1][curr_spell.name] = curr_spell
-                        last = 1
                     elif curr_spell.type == "Percent Buff":
                         all_spells[2][curr_spell.name] = curr_spell
-                        last = 2
                     elif curr_spell.type == "Flat Buff":
                         all_spells[3][curr_spell.name] = curr_spell
-                        last = 3
                     else:
                         raise ValueError
                 except ValueError:

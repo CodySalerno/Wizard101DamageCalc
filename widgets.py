@@ -39,7 +39,7 @@ class Button(tkinter.Button):  # Child class of Button
         else:
             self.radio_val = radio_var.get()  # finds the value the variable has when this button is created
             # TODO: give the variable an attribute for its default value instead of this method.
-            # TODO: Current method may cause an issue if button created after value changed.
+            # TODO: Current method may cause an issue if button created after value changed. Hasn't happened yet.
         self.bind("<Enter>", lambda event: self.on_enter(self.radio_val))
         # ^adds a bind for whenever you hover the button to check entry widgets
         # ^lambda has to take in argument but isn't needed in on_enter function
