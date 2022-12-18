@@ -31,6 +31,7 @@ def creation_per_pip():
             messagebox.showerror("Error", "Multiplier must be a number")
 
     c_pip = Tk()
+    c_pip.title("Creating a per pip damage spell")
     name_entry = w.Entry("name", master=c_pip, width=30)
     # entry widget for name of spell
     name_entry.grid(row=0)
@@ -58,7 +59,7 @@ def creation_standard():  # creates the form for a standard spell addition
             state += 1
             max_dam = int(max_dam_entry.get())  # error state of 2
             state += 1
-            if min_dam >= max_dam:
+            if min_dam > max_dam:
                 raise ValueError  # error value of 3
             if targets.get() == 1:
                 multi_target = False
@@ -78,10 +79,11 @@ def creation_standard():  # creates the form for a standard spell addition
                     messagebox.showerror("Error", "Maximum damage must be an integer.")
                     max_dam_entry.focus_force()
                 case 3:
-                    messagebox.showerror("Error", "Minimum damage must be less than maximum damage")
+                    messagebox.showerror("Error", "Minimum damage must be less than or equal to maximum damage")
                     min_dam_entry.focus_force()
 
     c_standard = Tk()
+    c_standard.title("Creating a standard damage spell")
     name_entry = w.Entry("name", master=c_standard, width=30)
     # entry widget for name of spell
     name_entry.grid(row=0)
@@ -132,6 +134,7 @@ def creation_percent_blade():
                 messagebox.showerror("Error", "percent buff must be between 1% and 100%")
                 percent_entry.focus_force()
     c_percent = Tk()
+    c_percent.title("Creating a percent damage buff spell")
     name_entry = w.Entry("name", master=c_percent, width=30)
     name_entry.grid(row=0)
     cost_entry = w.Entry(default_text="cost", master=c_percent, width=30)
@@ -169,6 +172,7 @@ def creation_flat_blade():
                 flat_entry.focus_force()
 
     c_flat = Tk()
+    c_flat.title("Creating a flat damage buff spell")
     name_entry = w.Entry("name", master=c_flat, width=30)
     name_entry.grid(row=0)
     cost_entry = w.Entry("cost", master=c_flat, width=30)
