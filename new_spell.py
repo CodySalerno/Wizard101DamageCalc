@@ -1,4 +1,4 @@
-from tkinter import *
+import tkinter as tk
 from tkinter import messagebox
 import StandardSpells as StS
 import MultiplierSpells as MpS
@@ -8,7 +8,7 @@ import widgets as w
 
 
 def creation():  # creates the form for choosing what type of spell
-    creator = Tk()
+    creator = tk.Tk()
     creator.title("Select a spell type")
     creator.focus_force()  # set this window to focus
     w.Button(master=creator, text="Standard", command=creation_standard).grid(row=0)
@@ -30,7 +30,7 @@ def creation_per_pip():
         except ValueError:
             messagebox.showerror("Error", "Multiplier must be a number")
 
-    c_pip = Tk()
+    c_pip = tk.Tk()
     c_pip.title("Creating a per pip damage spell")
     name_entry = w.Entry("name", master=c_pip, width=30)
     # entry widget for name of spell
@@ -39,12 +39,12 @@ def creation_per_pip():
     multiplier_entry = w.Entry("Damage per pip", master=c_pip, width=30)
     # entry widget for the multiplier of spell
     multiplier_entry.grid(row=1)
-    targets = IntVar(master=c_pip, value=3)  # variable for how many targets radio button is checked
-    Radiobutton(master=c_pip, text="Single Target", variable=targets, value=1).grid(row=2)
+    targets = tk.IntVar(master=c_pip, value=3)  # variable for how many targets radio button is checked
+    tk.Radiobutton(master=c_pip, text="Single Target", variable=targets, value=1).grid(row=2)
     # ^single target radio button
-    Radiobutton(master=c_pip, text="Multiple Targets", variable=targets, value=2).grid(row=3)
+    tk.Radiobutton(master=c_pip, text="Multiple Targets", variable=targets, value=2).grid(row=3)
     # ^multi target radio button
-    w.Button(radio_var=targets, master=c_pip, text="Submit", state=DISABLED, command=submission).grid(row=4)
+    w.Button(radio_var=targets, master=c_pip, text="Submit", state=tk.DISABLED, command=submission).grid(row=4)
     # button widget for submitting the spell
 
 
@@ -82,7 +82,7 @@ def creation_standard():  # creates the form for a standard spell addition
                     messagebox.showerror("Error", "Minimum damage must be less than or equal to maximum damage")
                     min_dam_entry.focus_force()
 
-    c_standard = Tk()
+    c_standard = tk.Tk()
     c_standard.title("Creating a standard damage spell")
     name_entry = w.Entry("name", master=c_standard, width=30)
     # entry widget for name of spell
@@ -97,12 +97,12 @@ def creation_standard():  # creates the form for a standard spell addition
     max_dam_entry = w.Entry(default_text="Maximum damage", master=c_standard, width=30)
     # entry widget for maximum damage of spell
     max_dam_entry.grid(row=3)
-    targets = IntVar(master=c_standard, value=3)  # variable for how many targets radio button is checked
-    Radiobutton(master=c_standard, text="Single Target", variable=targets, value=1).grid(row=4)
+    targets = tk.IntVar(master=c_standard, value=3)  # variable for how many targets radio button is checked
+    tk.Radiobutton(master=c_standard, text="Single Target", variable=targets, value=1).grid(row=4)
     # ^single target radio button
-    Radiobutton(master=c_standard, text="Multiple Targets", variable=targets, value=2).grid(row=5)
+    tk.Radiobutton(master=c_standard, text="Multiple Targets", variable=targets, value=2).grid(row=5)
     # ^multi target radio button
-    submit_button = w.Button(master=c_standard, text="submit", state=DISABLED, command=submission)
+    submit_button = w.Button(master=c_standard, text="submit", state=tk.DISABLED, command=submission)
     # ^submission disabled till entries filled out
     submit_button.grid(row=6)
 
@@ -133,7 +133,7 @@ def creation_percent_blade():
             else:
                 messagebox.showerror("Error", "percent buff must be between 1% and 100%")
                 percent_entry.focus_force()
-    c_percent = Tk()
+    c_percent = tk.Tk()
     c_percent.title("Creating a percent damage buff spell")
     name_entry = w.Entry("name", master=c_percent, width=30)
     name_entry.grid(row=0)
@@ -141,12 +141,12 @@ def creation_percent_blade():
     cost_entry.grid(row=1)
     percent_entry = w.Entry("percent buff", master=c_percent, width=30)
     percent_entry.grid(row=2)
-    targets = IntVar(master=c_percent, value=3)  # variable for how many targets radio button is checked
-    Radiobutton(master=c_percent, text="Single Target", variable=targets, value=1).grid(row=3)
+    targets = tk.IntVar(master=c_percent, value=3)  # variable for how many targets radio button is checked
+    tk.Radiobutton(master=c_percent, text="Single Target", variable=targets, value=1).grid(row=3)
     # ^single target radio button
-    Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=4)
+    tk.Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=4)
     # ^multi target radio button
-    submit_button = w.Button(master=c_percent, text="submit", state=DISABLED, command=submission)
+    submit_button = w.Button(master=c_percent, text="submit", state=tk.DISABLED, command=submission)
     submit_button.grid(row=5)
 
 
@@ -171,20 +171,20 @@ def creation_flat_blade():
                 messagebox.showerror("Error", "Flat buff must be an integer.")
                 flat_entry.focus_force()
 
-    c_flat = Tk()
+    c_flat = tk.Tk()
     c_flat.title("Creating a flat damage buff spell")
     name_entry = w.Entry("name", master=c_flat, width=30)
     name_entry.grid(row=0)
     cost_entry = w.Entry("cost", master=c_flat, width=30)
     cost_entry.grid(row=1)
-    targets = IntVar(master=c_flat, value=3)  # variable for how many targets radio button is checked
-    Radiobutton(master=c_flat, text="Single Target", variable=targets, value=1).grid(row=2)
+    targets = tk.IntVar(master=c_flat, value=3)  # variable for how many targets radio button is checked
+    tk.Radiobutton(master=c_flat, text="Single Target", variable=targets, value=1).grid(row=2)
     # ^single target radio button
-    Radiobutton(master=c_flat, text="Multiple Targets", variable=targets, value=2).grid(row=3)
+    tk.Radiobutton(master=c_flat, text="Multiple Targets", variable=targets, value=2).grid(row=3)
     # ^multi target radio button
     flat_entry = w.Entry("flat buff", master=c_flat, width=30)
     flat_entry.grid(row=4)
-    submit_button = w.Button(master=c_flat, text="submit", state=DISABLED, command=submission)
+    submit_button = w.Button(master=c_flat, text="submit", state=tk.DISABLED, command=submission)
     submit_button.grid(row=5)
 
 

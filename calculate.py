@@ -4,9 +4,14 @@ import PercentBuff as PercB
 import StandardSpells as StandardS
 import file_handler as fh
 import more_itertools
+import tkinter as tk
+from tkinter import messagebox
+import widgets as w
+import Enemy
 
 
 def create_buff_and_spell_lists():
+    """create_buff_and_spell_lists calculates every combination of buffs and gets a list of all attack spells."""
     all_spells = fh.get_all_spells()  # gets all spells into 4 lists of dictionaries
     standard_spells: list[StandardS.StandardSpells] = []
     multiplier_spells: list[MultiS.MultiplierSpells] = []
@@ -54,6 +59,8 @@ def create_buff_and_spell_lists():
 
 
 def calculate_buff(buff_combo):
+    """calculate_buff is ran during create_buff_and_spell_lists to turn the collection of combos into a list of tuples.
+    Each tuple is one combination of buffs. This method is just to make the data more usable. """
     multiplier: float = 1
     flat_buff: int = 0
     cost: int = 0
@@ -79,6 +86,7 @@ def calculate_everything(calculated_buffs: list[tuple[float, int, list[str], int
     damage spells is a list of all the spells of type StandardSpells or MultiplierSpells."""
     standard_finished: list[tuple[float, float, list[str], int]] = []
     """standard_finished is a list of the standard spells after they've been combined with buffs.
+    the list is [minimum damage, maximum damage, list of names, total cost]
     There should be duplicates of spells because they will have different stats since they've been combined
     with different buffs."""
     multiplier_finished = []
@@ -110,12 +118,43 @@ def calculate_everything(calculated_buffs: list[tuple[float, int, list[str], int
     return standard_finished, multiplier_finished
 
 
+def enemy_stats():
+    def submission():
+        try:
+            enemy_health = int(enemy_health_widget.get())
+            Enemy.Enemy(enemy_health)
+            root.destroy()
+        except ValueError:
+            messagebox.showerror("Error", "Multiplier must be a number")
+    root = tk.Tk()
+    root.title("Enemy")
+    enemy_health_widget = w.Entry("Enemy maximum health", master=root, width=50)
+    enemy_health_widget.grid(row=0)
+    submit_button = w.Button(master=root, text="submit", state=tk.DISABLED, command=submission)
+    # ^submission disabled till entries filled out
+    submit_button.grid(row=6)
+
+
 def main():
     buffs, spells = create_buff_and_spell_lists()
     # buffs is a list of tuples containing in order: multiplier, flat buff, names of spells in that combo, total cost.
     # spells is a list of all the spells of the StandardSpells and MultiplierSpells types.
     standard_done, multiplier_done = calculate_everything(buffs, spells)
-    print("standard")
-    print(standard_done)
-    print("multiplier")
-    print(multiplier_done)
+    costs_and_max_dam: dict[int, tuple[float, float, list[str], int]] = {}
+    """costs_and_max_dam is a dict of a key for the cost and a value of the spell obj"""
+    costs_and_min_dam: dict[int, tuple[float, float, list[str], int]] = {}
+    """costs_and_min_dam is a dict of a key for the cost and a value of the spell obj"""
+    for spell in standard_done:
+        try:
+            if costs_and_max_dam[spell[3]][1] < spell[1]:
+                # ^if dict[spell[cost]] (this sets the spell's cost to the key) < spell[max_dam]
+                costs_and_max_dam[spell[3]] = spell
+        except KeyError:  # if this value isn't in the dictionary as a key yet
+            costs_and_max_dam[spell[3]] = spell
+        try:
+            if costs_and_min_dam[spell[3]][0] < spell[0]:
+                # ^if dict[spell[cost]] (this sets the spell's cost to the key) < spell[min_dam]
+                costs_and_min_dam[spell[3]] = spell
+        except KeyError:  # if this value isn't in the dictionary as a key yet
+            costs_and_min_dam[spell[3]] = spell
+    enemy_stats()

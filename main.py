@@ -1,4 +1,4 @@
-from tkinter import *
+import tkinter as tk
 import new_spell
 import check_spell
 import calculate as calc
@@ -17,13 +17,13 @@ def check_spells():
 
 
 if __name__ == "__main__":
-    root = Tk()
+    root = tk.Tk()
     root.title("Wizard101 Spell Damage Calculator")
-    calcButton = Button(master=root, text="Calculator", command=calculate)
+    calcButton = tk.Button(master=root, text="Calculator", command=calculate)
     calcButton.grid(row=0)
-    spellButton = Button(master=root, text="Add new spell", command=create_new)
+    spellButton = tk.Button(master=root, text="Add new spell", command=create_new)
     spellButton.grid(row=1)
-    checkButton = Button(master=root, text="See created spells", command=check_spells)
+    checkButton = tk.Button(master=root, text="See created spells", command=check_spells)
     checkButton.grid(row=2)
 
     root.mainloop()
