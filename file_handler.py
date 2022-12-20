@@ -10,20 +10,25 @@ std_dir = "%APPDATA%/Wiz101Calc"
 std_dir = os.path.expandvars(std_dir)
 std_file = "%APPDATA%/Wiz101Calc/AllSpells.pickle"
 std_file = os.path.expandvars(std_file)
+std_enemy_file = "%APPDATA%/Wiz101Calc/Enemy.pickle"
+std_enemy_file = os.path.expandvars(std_enemy_file)
 
 
-def create_file(direc=std_dir, file=std_file):
+def create_files(direc=std_dir, file=std_file, enemy_file=std_enemy_file):
     """Creates a file at the specified directory and file if it doesn't already exist."""
     direc = os.path.expandvars(direc)
     file = os.path.expandvars(file)
+    enemy_file = os.path.expandvars(enemy_file)
     if not os.path.exists(direc):  # if directory doesn't exist
         os.mkdir(direc)  # create directory
     if not os.path.exists(file):
         open(file, 'w').close()
+    if not os.path.exists(enemy_file):
+        open(file, 'w').close()
 
 
 def add_to_file(spell, direc=std_dir, file=std_file):
-    """Adds spell to file, if file doesn't exist calls the create_file method and then recalls itself
+    """Adds spell to file, if file doesn't exist calls the create_files method and then recalls itself
        If spell name already exists calls update confirm instead. """
     found = search_for_spell(spell.name)
     if found is not None:
@@ -33,7 +38,7 @@ def add_to_file(spell, direc=std_dir, file=std_file):
             with open(file, 'a+b') as pickle_file:
                 pickle.dump(spell, pickle_file)
         except FileNotFoundError:
-            create_file(direc, file)
+            create_files(direc, file)
             add_to_file(spell, direc, file)
 
 
@@ -64,7 +69,7 @@ def get_all_spells(direc=std_dir, file=std_file):
                 except EOFError:
                     return all_spells
     except FileNotFoundError:
-        create_file(direc, file)
+        create_files(direc, file)
         return all_spells
 
 
@@ -82,7 +87,7 @@ def search_for_spell(name: str, direc=std_dir, file=std_file)\
                 except EOFError:
                     return None
     except FileNotFoundError:
-        create_file(direc, file)
+        create_files(direc, file)
         return None
 
 
@@ -132,6 +137,16 @@ def update(spell, file=std_file):
                 print("This shouldn't happen")
     except FileNotFoundError:
         print("This shouldn't happen")
+
+
+def create_enemy_file(direc=std_dir, file=std_enemy_file):
+    """Creates a file at the specified directory and file if it doesn't already exist."""
+    direc = os.path.expandvars(direc)
+    file = os.path.expandvars(file)
+    if not os.path.exists(direc):  # if directory doesn't exist
+        os.mkdir(direc)  # create directory
+    if not os.path.exists(file):
+        open(file, 'w').close()
 
 
 if __name__ == '__main__':
