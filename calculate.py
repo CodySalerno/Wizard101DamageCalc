@@ -98,7 +98,9 @@ def calculate_everything(calculated_buffs: list[ComboB.ComboBuff],
     return standard_finished, multiplier_finished
 
 
-def enemy_stats(costs_and_min_dam, costs_and_max_dam, multiplier_done):
+def enemy_stats(costs_and_min_dam:  dict[int, list[BuffedS.BuffedStandard]],
+                costs_and_max_dam: dict[int, list[BuffedS.BuffedStandard]],
+                multiplier_done: list[BuffedS.BuffedMultiplier]):
     def submission():
         try:
             enemy_health = int(enemy_health_widget.get())
@@ -125,9 +127,9 @@ def enemy_stats(costs_and_min_dam, costs_and_max_dam, multiplier_done):
     enemy_window.mainloop()
 
 
-def simulator(standard_min_dict: dict[int, tuple[float, float, list[str], int]],
-              standard_max_dict: dict[int, tuple[float, float, list[str], int]],
-              multiplier_list: list[tuple[float, int, list[str], int]]):
+def simulator(standard_min_dict: dict[int, list[BuffedS.BuffedStandard]],
+              standard_max_dict: dict[int, list[BuffedS.BuffedStandard]],
+              multiplier_list: list[BuffedS.BuffedMultiplier]):
     enemy_list = Enemy.enemy_list
     one_enemy = True
     if len(enemy_list) > 1:
@@ -135,10 +137,10 @@ def simulator(standard_min_dict: dict[int, tuple[float, float, list[str], int]],
                                              "e.g. one strong enemy with some weak ones that aren't threats.")
         if not focus:
             one_enemy = False
-    for cost, spell in standard_min_dict.items():
+    for cost, list_of_buffed_spells in standard_min_dict.items():
         print(cost)
-        print(spell)
-        print(len(spell[2]))
+        for buffed_spell in list_of_buffed_spells:
+            pass
 
 
 def optimizer(standard_calced: list[BuffedS.BuffedStandard],
