@@ -8,12 +8,10 @@ class MultiplierSpells(Gs):
     and the multiplier each pips increases the damage by (float)"""
     def __init__(self, name: str, multi_target: bool, multiplier: float):
         from file_handler import add_to_file
-        super().__init__(spell_type="Multiplier", name=name)
-        self.multi_target = multi_target
+        super().__init__(spell_type="Multiplier", name=name, multi_target=multi_target)
         self.multiplier = multiplier
-        self.dict["Multiple Targets"] = multi_target
         self.dict["Multiplier"] = self.multiplier
         add_to_file(self)
 
     def __repr__(self):
-        return super().__repr__() + f"Multiple Targets: {self.multi_target}\nMultiplier: {self.multiplier}"
+        return super().__repr__() + f"Multiplier: {self.multiplier}"
