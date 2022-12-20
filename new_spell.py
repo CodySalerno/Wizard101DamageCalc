@@ -102,9 +102,8 @@ def creation_standard():  # creates the form for a standard spell addition
     # ^single target radio button
     tk.Radiobutton(master=c_standard, text="Multiple Targets", variable=targets, value=2).grid(row=5)
     # ^multi target radio button
-    submit_button = w.Button(master=c_standard, text="submit", state=tk.DISABLED, command=submission)
+    w.Button(master=c_standard, text="submit", state=tk.DISABLED, command=submission).grid(row=6)
     # ^submission disabled till entries filled out
-    submit_button.grid(row=6)
 
 
 def creation_percent_blade():
@@ -146,8 +145,7 @@ def creation_percent_blade():
     # ^single target radio button
     tk.Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=4)
     # ^multi target radio button
-    submit_button = w.Button(master=c_percent, text="submit", state=tk.DISABLED, command=submission)
-    submit_button.grid(row=5)
+    w.Button(master=c_percent, text="submit", state=tk.DISABLED, command=submission).grid(row=5)
 
 
 def creation_flat_blade():
@@ -184,8 +182,7 @@ def creation_flat_blade():
     # ^multi target radio button
     flat_entry = w.Entry("flat buff", master=c_flat, width=30)
     flat_entry.grid(row=4)
-    submit_button = w.Button(master=c_flat, text="submit", state=tk.DISABLED, command=submission)
-    submit_button.grid(row=5)
+    w.Button(master=c_flat, text="submit", state=tk.DISABLED, command=submission).grid(row=5)
 
 
 if __name__ == '__main__':
