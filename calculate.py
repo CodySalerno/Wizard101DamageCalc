@@ -3,6 +3,7 @@ import MultiplierSpells as MultiS
 import PercentBuff as PercB
 import StandardSpells as StandardS
 import ComboBuffs as ComboB
+import BuffedSpell as BuffedS
 import file_handler as fh
 import more_itertools
 import tkinter as tk
@@ -11,13 +12,21 @@ import widgets as w
 from Enemy import Enemy
 
 
+# Order of methods usually
+# create_buff_and_spell_list
+# calculate_everything
+# optimizer
+# enemy_stats
+# simulator
+
+
 def create_buff_and_spell_lists():
-    """create_buff_and_spell_lists calculates every combination of buffs and gets a list of all attack spells
+    """create_buff_and_spell_lists calculates every combination of buffs and gets a list of all attack_type spells
     Returns a tuple
 
     First is the list of all the buffs after they've been made and turned into ComboBuff objects to be more usable.
 
-    Second is the list of all the attack spells."""
+    Second is the list of all the attack_type spells."""
     all_spells = fh.get_all_spells()  # gets all spells into 4 lists of dictionaries
     standard_spells: list[StandardS.StandardSpells] = []
     multiplier_spells: list[MultiS.MultiplierSpells] = []
@@ -66,38 +75,25 @@ def create_buff_and_spell_lists():
 
 def calculate_everything(calculated_buffs: list[ComboB.ComboBuff],
                          damage_spells: list[StandardS.StandardSpells | MultiS.MultiplierSpells]):
-    """Calculated buffs is a list of ComboBuff objects
-    damage spells is a list of all the spells of type StandardSpells or MultiplierSpells."""
-    standard_finished: list[tuple[float, float, list[str], int]] = []
-    """standard_finished is a list of the standard spells after they've been combined with buffs.
-    the list is [minimum damage, maximum damage, list of names, total cost]
-    There should be duplicates of spells because they will have different stats since they've been combined
-    with different buffs."""
-    multiplier_finished = []
+    """calculated_buffs is a list of ComboBuff objects
+
+    damage_spells is a list of all the spells of type StandardSpells or MultiplierSpells.
+
+    Returns two lists
+
+    The first list is all the StandardSpells combined with each set of buffs.
+
+    The second list is all the MultiplierSpells combined with each set of buffs."""
+    standard_finished: list[BuffedS.BuffedStandard] = []
+    """standard_finished is a list of the standard spells after they've been combined with buffs."""
+    multiplier_finished: list[BuffedS.BuffedMultiplier] = []
     for spell in damage_spells:  # iterates through all damage spells
         if type(spell) == StandardS.StandardSpells:
             for buff_set in calculated_buffs:  # iterates through every combination of buffs
-                min_dam: float = spell.min_dam * buff_set.multiplier + buff_set.flat_buff
-                max_dam: float = spell.max_dam * buff_set.multiplier + buff_set.flat_buff
-                names: list[str] = []
-                for name in buff_set.names:
-                    names.append(name)
-                names.append(spell.name)
-                cost: int = spell.cost + buff_set.cost
-                stats = (min_dam, max_dam, names, cost)
-                standard_finished.append(stats)
-
+                standard_finished.append(BuffedS.BuffedStandard(buff_set, spell))
         elif type(spell) == MultiS.MultiplierSpells:
             for buff_set in calculated_buffs:  # iterates through every combination of buffs
-                boosted_damage: float = spell.multiplier * buff_set.multiplier
-                flat_buff: int = buff_set.flat_buff
-                names: list[str] = []
-                for name in buff_set.names:
-                    names.append(name)
-                names.append(spell.name)
-                cost: int = buff_set.cost
-                combined_spell = (boosted_damage, flat_buff, names, cost)
-                multiplier_finished.append(combined_spell)
+                multiplier_finished.append(BuffedS.BuffedMultiplier(buff_set, spell))
     # Have now looped through every spell with every combination of buffs and put them into two lists.
     return standard_finished, multiplier_finished
 
@@ -145,9 +141,9 @@ def simulator(standard_min_dict: dict[int, tuple[float, float, list[str], int]],
         print(len(spell[2]))
 
 
-def optimizer(standard_calced: list[tuple[float, float, list[str], int]],
-              costs_and_min_dam: dict[int, list[tuple[float, float, list[str], int]]] = None,
-              costs_and_max_dam: dict[int, list[tuple[float, float, list[str], int]]] = None):
+def optimizer(standard_calced: list[BuffedS.BuffedStandard],
+              costs_and_min_dam: dict[int, list[BuffedS.BuffedStandard]] = None,
+              costs_and_max_dam: dict[int, list[BuffedS.BuffedStandard]] = None):
     """Returns a tuple containing 2 dictionaries, the first based on standard spells minimum damage.
     The second based on standard spells maximum damage.
 
@@ -171,55 +167,54 @@ def optimizer(standard_calced: list[tuple[float, float, list[str], int]],
         cost_max = costs_and_max_dam
     change = False  # value stating if any changes were made
     for spell in standard_calced:  # loops through all combinations of spells
-        max_dam = spell[1]  # maximum damage of the current iteration
-        length = len(spell[2])  # number of spells in the combination
+        max_dam = spell.max_dam  # maximum damage of the current iteration
+        length = len(spell.names)  # number of spells in the combination
         try:
             good = True  # flag for if this combination isn't beaten by another spell
             same = False  # flag for if this combination is already in the dictionary
             sames_indexes = []  # list of indexes the spell is found at
-            for index, value in enumerate(cost_max[spell[3]]):
+            for index, value in enumerate(cost_max[spell.cost]):
                 if spell == value:  # checks if the combination is already in the list
                     same = True
                     sames_indexes.append(index)
-
-                elif max_dam <= value[1] and length >= len(value[2]):
+                elif max_dam <= value.max_dam and length >= len(value.names):
                     # ^checks if any combination already in the list has better stats.
                     good = False
                     break
             if good and not same:  # if no spell is completely better, and it's not already in the list.
-                cost_max[spell[3]].append(spell)  # adds it to the list.
+                cost_max[spell.cost].append(spell)  # adds it to the list.
                 change = True  # a change to the dictionary was made
             elif same and not good:  # if this spell was already in but is no longer good enough.
                 for i in sames_indexes:  # removes spell from any indexes it was found in.
-                    cost_max[spell[3]].pop(i)
+                    cost_max[spell.cost].pop(i)
                     change = True  # change was made
         except KeyError:  # no dictionary key for this cost exists yet.
-            cost_max[spell[3]] = [spell]
+            cost_max[spell.cost] = [spell]
             change = True
     # TODO: make below for loop part of above for loop.
     for spell in standard_calced:  # repeats above process for minimum damage
-        min_dam = spell[0]
-        length = len(spell[2])
+        min_dam = spell.min_dam
+        length = len(spell.names)
         try:
             good = True
             same = False
             sames_indexes = []
-            for index, value in enumerate(cost_min[spell[3]]):
+            for index, value in enumerate(cost_min[spell.cost]):
                 if spell == value:
                     same = True
                     sames_indexes.append(index)
-                if min_dam <= value[0] and length >= len(value[2]) and spell != value:
+                elif min_dam <= value.min_dam and length >= len(value.names):
                     good = False
                     break
             if good and not same:
-                cost_min[spell[3]].append(spell)
+                cost_min[spell.cost].append(spell)
                 change = True
             elif same and not good:
                 for i in sames_indexes:
-                    cost_min[spell[3]].pop(i)
+                    cost_min[spell.cost].pop(i)
                     change = True
         except KeyError:
-            cost_min[spell[3]] = [spell]
+            cost_min[spell.cost] = [spell]
             change = True
     if change:  # if any changes were made rerun this method with new dictionaries
         return optimizer(standard_calced, cost_min, cost_max)
