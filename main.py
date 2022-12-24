@@ -5,6 +5,7 @@ import calculate as calc
 
 
 def calculate():
+    root.destroy()
     calc.main()
 
 

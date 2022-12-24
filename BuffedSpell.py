@@ -21,10 +21,11 @@ class BuffedStandard(BaseBuffedSpell):
             self.names.append(name)
         self.names.append(self.attack_spell.name)
         self.cost: int = self.attack_spell.cost + self.buff.cost
+        self.multi_target = combo_buff.multi_target and attack_spell.multi_target
 
     def __repr__(self):
         return f"Minimum Damage: {self.min_dam}\nMaximum Damage: {self.max_dam}\n" \
-               f"All Spell Names: {self.names}\nCost: {self.cost}"
+               f"All Spell Names: {self.names}\nCost: {self.cost}\nMulti-target: {self.multi_target}"
 
 
 class BuffedMultiplier(BaseBuffedSpell):
@@ -37,8 +38,9 @@ class BuffedMultiplier(BaseBuffedSpell):
         for name in self.buff.names:
             self.names.append(name)
         self.names.append(self.attack_spell.name)
-        self.cost: int = self.buff.cost
+        self.cost: int = self.buff.cost + 1
+        self.multi_target = combo_buff.multi_target and attack_spell.multi_target
 
     def __repr__(self):
         return f"Multiplier Damage: {self.boosted_damage}\nFlat Buff: {self.flat_buff}\n" \
-               f"All Spell Names: {self.names}\nCost: {self.cost}"
+               f"All Spell Names: {self.names}\nCost: {self.cost}\nMulti-target: {self.multi_target}"

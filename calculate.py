@@ -1,3 +1,5 @@
+import sys
+
 import FlatBuff as FlatB
 import MultiplierSpells as MultiS
 import PercentBuff as PercB
@@ -15,9 +17,9 @@ from Enemy import Enemy
 # Order of methods usually
 # create_buff_and_spell_list
 # calculate_everything
-# optimizer
 # enemy_stats
 # simulator
+# optimizer (ran inside simulator)
 
 
 def create_buff_and_spell_lists():
@@ -98,9 +100,10 @@ def calculate_everything(calculated_buffs: list[ComboB.ComboBuff],
     return standard_finished, multiplier_finished
 
 
-def enemy_stats(costs_and_min_dam:  dict[int, list[BuffedS.BuffedStandard]],
-                costs_and_max_dam: dict[int, list[BuffedS.BuffedStandard]],
-                multiplier_done: list[BuffedS.BuffedMultiplier]):
+def enemy_stats():
+    multi_needed = True
+    enemy_list = []
+
     def submission():
         try:
             enemy_health = int(enemy_health_widget.get())
@@ -111,8 +114,14 @@ def enemy_stats(costs_and_min_dam:  dict[int, list[BuffedS.BuffedStandard]],
 
     def simulator_helper():
         """helper function to close out the enemy window and then call the simulator"""
+        nonlocal multi_needed, enemy_list
+        enemy_list = Enemy.enemy_list
+        if len(enemy_list) > 1:
+            multi_needed = messagebox.askyesno("Focus", "Are multi target spells necessary?\n"
+                                                        "e.g. multiple weak enemies rather than one strong one weak.")
+        else:
+            multi_needed = False
         enemy_window.destroy()
-        simulator(costs_and_min_dam, costs_and_max_dam, multiplier_done)
 
     enemy_window = tk.Tk()
     enemy_window.title("Enemy")
@@ -125,115 +134,112 @@ def enemy_stats(costs_and_min_dam:  dict[int, list[BuffedS.BuffedStandard]],
     tk.Button(master=enemy_window, text="All enemies submitted",
               state=tk.NORMAL, command=simulator_helper).grid(row=2, column=1)
     enemy_window.mainloop()
+    return multi_needed, enemy_list
 
 
-def simulator(standard_min_dict: dict[int, list[BuffedS.BuffedStandard]],
-              standard_max_dict: dict[int, list[BuffedS.BuffedStandard]],
-              multiplier_list: list[BuffedS.BuffedMultiplier]):
-    enemy_list = Enemy.enemy_list
-    one_enemy = True
-    if len(enemy_list) > 1:
-        focus = messagebox.askyesno("Focus", "Are single target spells okay?\n"
-                                             "e.g. one strong enemy with some weak ones that aren't threats.")
-        if not focus:
-            one_enemy = False
-    for cost, list_of_buffed_spells in standard_min_dict.items():
-        print(cost)
-        for buffed_spell in list_of_buffed_spells:
-            pass
+def simulator(standard_buffed: list[BuffedS.BuffedStandard],
+              multiplier_buffed: list[BuffedS.BuffedMultiplier], multi_needed: bool, enemy_list: list[Enemy],
+              min_use: bool, max_use: bool, multi_use: bool):
+    if multi_needed:
+        multiplier_buffed[:] = [spell for spell in multiplier_buffed if spell.multi_target]
+        standard_buffed[:] = [spell for spell in standard_buffed if spell.multi_target]
+    enemy_max_health: int = 0
+    for curr_enemy in enemy_list:
+        if curr_enemy.health > enemy_max_health:
+            enemy_max_health = curr_enemy.health
+    m_shortest_length = sys.maxsize
+    m_smallest_cost = sys.maxsize
+    multiplier_candidates = []
+    if multi_use:
+        for multiplier_spell in multiplier_buffed:
+            try:
+                curr_len, curr_cost = \
+                    multiplier_sim(multiplier_spell, enemy_max_health, m_shortest_length, m_smallest_cost)
+            except TypeError:
+                # not good enough multiplier
+                continue
+            if curr_len <= m_shortest_length and curr_cost <= m_smallest_cost:  # at least as good in both
+                m_shortest_length, m_smallest_cost = curr_len, curr_cost  # change best found to current
+                multiplier_candidates = [multiplier_spell]  # remove old found good spells for this one
+            elif curr_len < m_shortest_length or curr_cost < m_smallest_cost:  # better in one of the ways
+                multiplier_candidates.append(multiplier_spell)  # add it to the list of potentials.
+            else:
+                print("SIMULATOR FAILED THIS SHOULD BE UNREACHABLE")
+    standard_max_candidates, standard_min_candidates = [], []
+    for spell in standard_buffed:
+        if min_use and spell.min_dam >= enemy_max_health:
+            standard_min_candidates.append(spell)
+        if max_use and spell.max_dam >= enemy_max_health:
+            standard_max_candidates.append(spell)
+    filtered_standard_max = filter_spells(standard_max_candidates)
+    filter_standard_min = filter_spells(standard_min_candidates)
+    return multiplier_candidates, filter_standard_min, filtered_standard_max
 
 
-def optimizer(standard_calced: list[BuffedS.BuffedStandard],
-              costs_and_min_dam: dict[int, list[BuffedS.BuffedStandard]] = None,
-              costs_and_max_dam: dict[int, list[BuffedS.BuffedStandard]] = None):
-    """Returns a tuple containing 2 dictionaries, the first based on standard spells minimum damage.
-    The second based on standard spells maximum damage.
+def filter_spells(list_of_spells: list[BuffedS.BuffedStandard]):
+    filtered_list = []
+    for spell in list_of_spells:  # loop through all spells
+        keep = True  # flag for if spell meets criteria
+        for other in list_of_spells:  # loops through rest of spell
+            if spell is not other and spell.cost >= other.cost and len(spell.names) >= len(other.names):
+                # ^if both are worse or equal
+                if spell.cost == other.cost and len(spell.names) == len(other.names) and other not in filtered_list:
+                    # ^if both are equal and not in list yet don't throw it out.
+                    continue  # keep checking
+                keep = False  # both are worse or equal so don't add
+                break
+        if keep:  # once checked against all spells add to list
+            filtered_list.append(spell)
+    return filtered_list
 
-    Each dictionary has keys based on the total cost of a combination of spells with the value being
-    a tuple of float, float, list[str], int.
 
-    The first float is the combo's minimum damage.
+def multiplier_sim(spell: BuffedS.BuffedMultiplier, enemy_health: int, max_length: int, max_cost: int):
+    """Simulates how many pips are needed for this spell combo to One Hit KO.
+    returns the length (number of turns) and cost """
+    spell_length = len(spell.names)  # length of spell being simulated
+    spell_cost = spell.cost  # minimum cost of spell being simulated
+    base = spell.boosted_damage  # damage the spell does if the multiplier spell has 1 pip cost
+    max_iteration = max(max_length - spell_length, max_cost - spell_cost)
+    # ^optimization so it doesn't do more checks than necessary.
+    for pips in range(1, max_iteration):
+        # ^loops through giving extra pips to spell up to the max for it to be better than current best found.
+        if base * pips + spell.flat_buff > enemy_health:
+            return spell_length + pips - 1, spell_cost + pips - 1
+            # ^ needs a -1 because the BuffedMultiplier already includes a base cost and length of the spell of 1
+    return -1
 
-    The second float is the combo's maximum damage.
 
-    The list[str] is a list of the names of all spells needed to be cast.
+def spell_type_usage():
+    min_use = False
+    max_use = False
+    multi_use = False
 
-    The int is the total cost of the combination (the same as the key)."""
-    if costs_and_min_dam is None:
-        cost_min = {}
-    else:
-        cost_min = costs_and_min_dam
-    if costs_and_max_dam is None:
-        cost_max = {}
-    else:
-        cost_max = costs_and_max_dam
-    change = False  # value stating if any changes were made
-    for spell in standard_calced:  # loops through all combinations of spells
-        max_dam = spell.max_dam  # maximum damage of the current iteration
-        length = len(spell.names)  # number of spells in the combination
-        try:
-            good = True  # flag for if this combination isn't beaten by another spell
-            same = False  # flag for if this combination is already in the dictionary
-            sames_indexes = []  # list of indexes the spell is found at
-            for index, value in enumerate(cost_max[spell.cost]):
-                if spell == value:  # checks if the combination is already in the list
-                    same = True
-                    sames_indexes.append(index)
-                elif max_dam <= value.max_dam and length >= len(value.names):
-                    # ^checks if any combination already in the list has better stats.
-                    good = False
-                    break
-            if good and not same:  # if no spell is completely better, and it's not already in the list.
-                cost_max[spell.cost].append(spell)  # adds it to the list.
-                change = True  # a change to the dictionary was made
-            elif same and not good:  # if this spell was already in but is no longer good enough.
-                for i in sames_indexes:  # removes spell from any indexes it was found in.
-                    cost_max[spell.cost].pop(i)
-                    change = True  # change was made
-        except KeyError:  # no dictionary key for this cost exists yet.
-            cost_max[spell.cost] = [spell]
-            change = True
-    # TODO: make below for loop part of above for loop.
-    for spell in standard_calced:  # repeats above process for minimum damage
-        min_dam = spell.min_dam
-        length = len(spell.names)
-        try:
-            good = True
-            same = False
-            sames_indexes = []
-            for index, value in enumerate(cost_min[spell.cost]):
-                if spell == value:
-                    same = True
-                    sames_indexes.append(index)
-                elif min_dam <= value.min_dam and length >= len(value.names):
-                    good = False
-                    break
-            if good and not same:
-                cost_min[spell.cost].append(spell)
-                change = True
-            elif same and not good:
-                for i in sames_indexes:
-                    cost_min[spell.cost].pop(i)
-                    change = True
-        except KeyError:
-            cost_min[spell.cost] = [spell]
-            change = True
-    if change:  # if any changes were made rerun this method with new dictionaries
-        return optimizer(standard_calced, cost_min, cost_max)
-    else:
-        return cost_min, cost_max
+    def submission():
+        nonlocal min_use, max_use, multi_use
+        min_use = standard_min.get()
+        max_use = standard_max.get()
+        multi_use = multiplier.get()
+        window.destroy()
+    window = tk.Tk()
+    window.title("Spells")
+    standard_min = tk.IntVar()
+    standard_max = tk.IntVar()
+    multiplier = tk.IntVar()
+    tk.Label(master=window, text="Select the spells you want to use").grid(row=0)
+    tk.Checkbutton(master=window, text="Standard spells minimum damage", variable=standard_min).grid(row=1)
+    tk.Checkbutton(master=window, text="Standard spells maximum damage", variable=standard_max).grid(row=2)
+    tk.Checkbutton(master=window, text="Per pip (multiplier) spells", variable=multiplier).grid(row=3)
+    w.Button(master=window, text="submit", state=tk.DISABLED, command=submission).grid(row=4)
+    # ^submission disabled till entries filled out
+    window.mainloop()
+    return min_use, max_use, multi_use
 
 
 def main():
     buffs, spells = create_buff_and_spell_lists()
-    # buffs is a list of tuples containing in order: multiplier, flat buff, names of spells in that combo, total cost.
-    # spells is a list of all the spells of the StandardSpells and MultiplierSpells types.
-    standard_done_calculating, multiplier_done = calculate_everything(buffs, spells)
-    """standard_done_calculating is a list of the standard spells after they've been combined with buffs. 
-    The list is [minimum damage, maximum damage, list of names, total cost] 
-    There should be duplicates of spells because they will have different stats 
-    since they've been combined with different buffs."""
-    cost_and_min_dam, cost_and_max_dam = optimizer(standard_done_calculating)
-    print(cost_and_min_dam)
-    print(cost_and_max_dam)
-    enemy_stats(cost_and_min_dam, cost_and_max_dam, multiplier_done)
+    standard_calculated, multiplier_calculated = calculate_everything(buffs, spells)
+    multi_needed, enemy_list = enemy_stats()
+    min_use, max_use, multi_use = spell_type_usage()
+    multi, s_min, s_max = \
+        simulator(standard_calculated, multiplier_calculated, multi_needed, enemy_list, min_use, max_use, multi_use)
+    # TODO: make output of above 3 variables pretty.
