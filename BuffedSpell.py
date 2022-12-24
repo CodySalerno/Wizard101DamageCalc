@@ -11,11 +11,14 @@ class BaseBuffedSpell(abc.ABC):
 
 
 class BuffedStandard(BaseBuffedSpell):
-    def __init__(self, combo_buff: ComboBuff, attack_spell: StandardSpells):
+    def __init__(self, combo_buff: ComboBuff, attack_spell: StandardSpells, gear_perc, gear_flat):
         self.buff = combo_buff
         self.attack_spell = attack_spell
-        self.min_dam: float = self.attack_spell.min_dam * self.buff.multiplier + self.buff.flat_buff
-        self.max_dam: float = self.attack_spell.max_dam * self.buff.multiplier + self.buff.flat_buff
+        gear_perc = (100 + gear_perc) / 100
+        multiplier = self.buff.multiplier * gear_perc
+        flat = self.buff.flat_buff + gear_flat
+        self.min_dam: float = self.attack_spell.min_dam * multiplier + flat
+        self.max_dam: float = self.attack_spell.max_dam * multiplier + flat
         self.names: list[str] = []
         for name in self.buff.names:
             self.names.append(name)
@@ -29,11 +32,14 @@ class BuffedStandard(BaseBuffedSpell):
 
 
 class BuffedMultiplier(BaseBuffedSpell):
-    def __init__(self, combo_buff: ComboBuff, attack_spell: MultiplierSpells):
+    def __init__(self, combo_buff: ComboBuff, attack_spell: MultiplierSpells, gear_perc, gear_flat):
         self.buff = combo_buff
         self.attack_spell = attack_spell
-        self.boosted_damage: float = self.attack_spell.multiplier * self.buff.multiplier
-        self.flat_buff: int = self.buff.flat_buff
+        gear_perc = (100 + gear_perc) / 100
+        multiplier = self.buff.multiplier * gear_perc
+        flat = self.buff.flat_buff + gear_flat
+        self.boosted_damage: float = self.attack_spell.multiplier * multiplier
+        self.flat_buff: int = flat
         self.names: list[str] = []
         for name in self.buff.names:
             self.names.append(name)

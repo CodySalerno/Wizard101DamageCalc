@@ -138,12 +138,13 @@ def creation_percent_blade():
     name_entry.grid(row=0)
     cost_entry = w.Entry(default_text="cost", master=c_percent, width=30)
     cost_entry.grid(row=1)
+    tk.Label(master=c_percent, text="If the spell increases damage by 50% percent buff should be 50").grid(row=2)
     percent_entry = w.Entry("percent buff", master=c_percent, width=30)
-    percent_entry.grid(row=2)
+    percent_entry.grid(row=3)
     targets = tk.IntVar(master=c_percent, value=3)  # variable for how many targets radio button is checked
-    tk.Radiobutton(master=c_percent, text="Single Target", variable=targets, value=1).grid(row=3)
+    tk.Radiobutton(master=c_percent, text="Single Target", variable=targets, value=1).grid(row=4)
     # ^single target radio button
-    tk.Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=4)
+    tk.Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=5)
     # ^multi target radio button
     w.Button(master=c_percent, text="submit", state=tk.DISABLED, command=submission).grid(row=5)
 
