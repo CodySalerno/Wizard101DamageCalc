@@ -1,6 +1,5 @@
 import sys
 
-import FlatBuff as FlatB
 import MultiplierSpells as MultiS
 import PercentBuff as PercB
 import StandardSpells as StandardS
@@ -22,24 +21,13 @@ def create_buff_and_spell_lists():
     all_spells = fh.get_all_spells()  # gets all spells into 4 lists of dictionaries
     standard_spells: list[StandardS.StandardSpells] = []
     multiplier_spells: list[MultiS.MultiplierSpells] = []
-    percent_buffs: list[PercB.PercentBuff] = []
-    flat_buffs: list[FlatB.FlatBuff] = []
+    all_buffs: list[PercB.PercentBuff] = []
     for key, value in all_spells[0].items():  # makes a list of objects of type StandardSpells
         standard_spells.append(value)
     for key, value in all_spells[1].items():  # makes a list of objects of type MultiplierSpells
         multiplier_spells.append(value)
     for key, value in all_spells[2].items():  # makes a list of objects of type PercentBuffs
-        percent_buffs.append(value)
-    for key, value in all_spells[3].items():  # makes a list of objects of type FlatBuffs
-        flat_buffs.append(value)
-    all_buffs: list[FlatB.FlatBuff | PercB.PercentBuff] = []
-    for i in percent_buffs:
-        all_buffs.append(i)
-    for i in flat_buffs:
-        all_buffs.append(i)
-    # adds all flat and percent buffs to one list
-    # instead could do below but leads to type hinting warning
-    # all_buffs = percent_buffs + flat_buffs
+        all_buffs.append(value)
     all_attacks: list[StandardS.StandardSpells | MultiS.MultiplierSpells] = []
     for i in standard_spells:
         all_attacks.append(i)
@@ -146,7 +134,7 @@ def simulator(standard_buffed: list[BuffedS.BuffedStandard],
                 continue
             if curr_len <= m_shortest_length and curr_cost <= m_smallest_cost:  # at least as good in both
                 m_shortest_length, m_smallest_cost = curr_len, curr_cost  # change best found to current
-                multiplier_candidates = [multiplier_spell, extra_rounds]  # remove old found good spells for this one
+                multiplier_candidates = [(multiplier_spell, extra_rounds)]  # remove old found good spells for this one
             elif curr_len < m_shortest_length or curr_cost < m_smallest_cost:  # better in one of the ways
                 multiplier_candidates.append((multiplier_spell, extra_rounds))  # add it to the list of potentials.
             else:
@@ -248,9 +236,9 @@ def gear():
     window = tk.Tk()
     tk.Label(master=window, text="If your gear increases damage by 50% percent damage should be 50").grid(row=0)
     tk.Label(master=window, text="If no gear increase enter 0").grid(row=1)
-    percent_damage_entry = w.Entry("Percent damage increase from gear", master=window, width=30)
+    percent_damage_entry = w.Entry("Percent damage increase from gear", master=window, width=50)
     percent_damage_entry.grid(row=2)
-    flat_damage_entry = w.Entry("Flat damage increase from gear", master=window, width=30)
+    flat_damage_entry = w.Entry("Flat damage increase from gear", master=window, width=50)
     flat_damage_entry.grid(row=3)
     w.Button(master=window, text="submit", state=tk.DISABLED, command=submission).grid(row=4)
     window.mainloop()
@@ -260,20 +248,23 @@ def gear():
 def display(multi: list[tuple[BuffedS.BuffedMultiplier, int]],
             standard_min: list[BuffedS.BuffedStandard], standard_max: list[BuffedS.BuffedStandard]):
     current_spell_names = []
+    print("Per pip (multiplier) spells:")
     for spell, extra in multi:
         for name in spell.names:
             current_spell_names.append(name)
-        pass  # display list of names and extra
+        print(f"{str(current_spell_names)} and at least {extra} pips")  # display list of names and extra
         current_spell_names = []
+    print("\nStandard spells based on minimum damage:")
     for spell in standard_min:
         for name in spell.names:
             current_spell_names.append(name)
-        pass  # display list of names
+        print(str(current_spell_names))  # display list of names
         current_spell_names = []
+    print("\nStandard spells based on maximum damage:")
     for spell in standard_max:
         for name in spell.names:
             current_spell_names.append(name)
-        pass  # display list of names
+        print(str(current_spell_names))  # display list of names
         current_spell_names = []
 
 

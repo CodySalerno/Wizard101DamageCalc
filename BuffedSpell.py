@@ -16,9 +16,8 @@ class BuffedStandard(BaseBuffedSpell):
         self.attack_spell = attack_spell
         gear_perc = (100 + gear_perc) / 100
         multiplier = self.buff.multiplier * gear_perc
-        flat = self.buff.flat_buff + gear_flat
-        self.min_dam: float = self.attack_spell.min_dam * multiplier + flat
-        self.max_dam: float = self.attack_spell.max_dam * multiplier + flat
+        self.min_dam: float = self.attack_spell.min_dam * multiplier + gear_flat
+        self.max_dam: float = self.attack_spell.max_dam * multiplier + gear_flat
         self.names: list[str] = []
         for name in self.buff.names:
             self.names.append(name)
@@ -37,9 +36,8 @@ class BuffedMultiplier(BaseBuffedSpell):
         self.attack_spell = attack_spell
         gear_perc = (100 + gear_perc) / 100
         multiplier = self.buff.multiplier * gear_perc
-        flat = self.buff.flat_buff + gear_flat
+        self.flat_buff: int = gear_flat
         self.boosted_damage: float = self.attack_spell.multiplier * multiplier
-        self.flat_buff: int = flat
         self.names: list[str] = []
         for name in self.buff.names:
             self.names.append(name)

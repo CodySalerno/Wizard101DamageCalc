@@ -3,7 +3,6 @@ from tkinter import messagebox
 import StandardSpells as StS
 import MultiplierSpells as MpS
 import PercentBuff as PerB
-import FlatBuff as FlatB
 import widgets as w
 
 
@@ -146,44 +145,7 @@ def creation_percent_blade():
     # ^single target radio button
     tk.Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=5)
     # ^multi target radio button
-    w.Button(master=c_percent, text="submit", state=tk.DISABLED, command=submission).grid(row=5)
-
-
-def creation_flat_blade():
-    def submission():
-        state = 0
-        try:
-            name = name_entry.get()
-            cost = int(cost_entry.get())
-            state = 1
-            flat = int(flat_entry.get())
-            if targets.get() == 1:
-                multi_target = False
-            else:
-                multi_target = True
-            FlatB.FlatBuff(name, cost, multi_target, flat)
-        except ValueError:
-            if state == 0:
-                messagebox.showerror("Error", "Cost must be an integer.")
-                cost_entry.focus_force()
-            else:
-                messagebox.showerror("Error", "Flat buff must be an integer.")
-                flat_entry.focus_force()
-
-    c_flat = tk.Tk()
-    c_flat.title("Creating a flat damage buff spell")
-    name_entry = w.Entry("name", master=c_flat, width=30)
-    name_entry.grid(row=0)
-    cost_entry = w.Entry("cost", master=c_flat, width=30)
-    cost_entry.grid(row=1)
-    targets = tk.IntVar(master=c_flat, value=3)  # variable for how many targets radio button is checked
-    tk.Radiobutton(master=c_flat, text="Single Target", variable=targets, value=1).grid(row=2)
-    # ^single target radio button
-    tk.Radiobutton(master=c_flat, text="Multiple Targets", variable=targets, value=2).grid(row=3)
-    # ^multi target radio button
-    flat_entry = w.Entry("flat buff", master=c_flat, width=30)
-    flat_entry.grid(row=4)
-    w.Button(master=c_flat, text="submit", state=tk.DISABLED, command=submission).grid(row=5)
+    w.Button(master=c_percent, text="submit", state=tk.DISABLED, command=submission).grid(row=6)
 
 
 if __name__ == '__main__':

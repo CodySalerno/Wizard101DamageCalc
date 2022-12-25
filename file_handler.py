@@ -3,7 +3,6 @@ import pickle
 from StandardSpells import StandardSpells
 from MultiplierSpells import MultiplierSpells
 from PercentBuff import PercentBuff
-from FlatBuff import FlatBuff
 from tkinter import messagebox
 
 std_dir = "%APPDATA%/Wiz101Calc"
@@ -74,7 +73,7 @@ def get_all_spells(direc=std_dir, file=std_file):
 
 
 def search_for_spell(name: str, direc=std_dir, file=std_file)\
-                     -> StandardSpells | MultiplierSpells | PercentBuff | FlatBuff | None:
+                     -> StandardSpells | MultiplierSpells | PercentBuff | None:
     """Searches file for spell with name provided. If found returns the spell, otherwise returns None."""
     try:
         with open(file, 'rb') as pickle_file:
@@ -91,8 +90,8 @@ def search_for_spell(name: str, direc=std_dir, file=std_file)\
         return None
 
 
-def update_confirm(new_spell: StandardSpells | MultiplierSpells | PercentBuff | FlatBuff,
-                   old_spell: StandardSpells | MultiplierSpells | PercentBuff | FlatBuff, file=std_file):
+def update_confirm(new_spell: StandardSpells | MultiplierSpells | PercentBuff,
+                   old_spell: StandardSpells | MultiplierSpells | PercentBuff, file=std_file):
     if new_spell.dict == old_spell.dict:
         messagebox.showinfo("Same spell", "This spell is already in your file with these stats.")
         return False
