@@ -21,8 +21,3 @@ class StandardSpells(Gs):
 
     def __repr__(self):
         return super().__repr__() + f"Cost: {self.cost}\nMinimum Damage: {self.min_dam}\nMaximum Damage: {self.max_dam}"
-
-
-if __name__ == '__main__':
-    asdf = StandardSpells('asdf', 1, True, 2, 3)
-    zxcv = StandardSpells('zxcv', 2, True, 4, 6)

@@ -177,8 +177,8 @@ def multiplier_sim(spell: BuffedS.BuffedMultiplier, enemy_health: int, max_lengt
     # ^optimization so it doesn't do more checks than necessary.
     for pips in range(1, max_iteration):
         # ^loops through giving extra pips to spell up to the max for it to be better than current best found.
-        if base * pips + spell.flat_buff > enemy_health:
-            return spell_length + pips - 1, spell_cost + pips - 1, pips - 1
+        if base * pips + spell.flat_buff >= enemy_health:
+            return spell_length + pips - 1, spell_cost + pips - 1, pips
             # ^ needs a -1 because the BuffedMultiplier already includes a base cost and length of the spell of 1
     return -1
 
@@ -234,6 +234,7 @@ def gear():
                 messagebox.showerror("Error", "Flat damage increase must be an integer.")
 
     window = tk.Tk()
+    window.title("Gear")
     tk.Label(master=window, text="If your gear increases damage by 50% percent damage should be 50").grid(row=0)
     tk.Label(master=window, text="If no gear increase enter 0").grid(row=1)
     percent_damage_entry = w.Entry("Percent damage increase from gear", master=window, width=50)
@@ -252,19 +253,24 @@ def display(multi: list[tuple[BuffedS.BuffedMultiplier, int]],
     for spell, extra in multi:
         for name in spell.names:
             current_spell_names.append(name)
-        print(f"{str(current_spell_names)} and at least {extra} pips")  # display list of names and extra
+        output = f"{str(current_spell_names)} and at least {extra} pips"
+        print(output)  # display list of names and extra
+
+        messagebox.showinfo("spell option", output)
         current_spell_names = []
     print("\nStandard spells based on minimum damage:")
     for spell in standard_min:
         for name in spell.names:
             current_spell_names.append(name)
         print(str(current_spell_names))  # display list of names
+        messagebox.showinfo("spell option", str(current_spell_names))
         current_spell_names = []
     print("\nStandard spells based on maximum damage:")
     for spell in standard_max:
         for name in spell.names:
             current_spell_names.append(name)
         print(str(current_spell_names))  # display list of names
+        messagebox.showinfo("spell option", str(current_spell_names))
         current_spell_names = []
 
 
@@ -276,5 +282,5 @@ def main():
     min_use, max_use, multi_use = spell_type_usage()
     multi, s_min, s_max = \
         simulator(standard_calculated, multiplier_calculated, multi_needed, enemy_list, min_use, max_use, multi_use)
-    # TODO: make output of above 3 variables pretty.
+    # TODO: make display function pretty.
     display(multi, s_min, s_max)

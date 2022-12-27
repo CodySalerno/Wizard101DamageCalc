@@ -146,7 +146,3 @@ def creation_percent_blade():
     tk.Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=5)
     # ^multi target radio button
     w.Button(master=c_percent, text="submit", state=tk.DISABLED, command=submission).grid(row=6)
-
-
-if __name__ == '__main__':
-    creation()

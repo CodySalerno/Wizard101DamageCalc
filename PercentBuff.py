@@ -20,8 +20,3 @@ class PercentBuff(Gs):
 
     def __repr__(self):
         return super().__repr__() + f"Cost: {self.cost}\nPercent buff: {self.percent}"
-
-
-if __name__ == '__main__':
-    asdf = PercentBuff('asdf', 1, True, 35)
-    zxcv = PercentBuff('zxcv', 2, False, 35)

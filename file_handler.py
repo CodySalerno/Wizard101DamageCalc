@@ -146,7 +146,3 @@ def create_enemy_file(direc=std_dir, file=std_enemy_file):
         os.mkdir(direc)  # create directory
     if not os.path.exists(file):
         open(file, 'w').close()
-
-
-if __name__ == '__main__':
-    pass
