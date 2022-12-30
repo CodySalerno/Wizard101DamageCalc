@@ -5,6 +5,7 @@ import calculate as calc
 
 
 def calculate():
+    root.destroy()
     calc.main()
 
 
@@ -25,5 +26,4 @@ if __name__ == "__main__":
     spellButton.grid(row=1)
     checkButton = tk.Button(master=root, text="See created spells", command=check_spells)
     checkButton.grid(row=2)
-
     root.mainloop()
