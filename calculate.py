@@ -78,9 +78,12 @@ def enemy_stats():
         try:
             enemy_health = int(enemy_health_widget.get())
             enemy_name = enemy_name_widget.get()
-            Enemy(enemy_name, enemy_health)
+            resistances = enemy_resistance()
+            weaknesses = enemy_weakness()
+            Enemy(enemy_name, enemy_health, resistances, weaknesses)
+
         except ValueError:
-            messagebox.showerror("Error", "Multiplier must be a number")
+            messagebox.showerror("Error", "Enemy health must be a number")
 
     def simulator_helper():
         """helper function to close out the enemy window and then call the simulator"""
@@ -105,6 +108,68 @@ def enemy_stats():
               state=tk.NORMAL, command=simulator_helper).grid(row=2, column=1)
     enemy_window.mainloop()
     return multi_needed, enemy_list
+
+
+def enemy_weakness():
+    def submit():
+        curr_index = 0
+        try:
+            for entry_index, entry in enumerate(weakness_entries):
+                curr_index = entry_index
+                if int(entry.get()) != 0:
+                    weak_schools[schools[entry_index]] = int(entry.get())
+            weakness_window.destroy()
+        except ValueError:
+            messagebox.showerror("Error", "Percentage should be an integer")
+            weakness_entries[curr_index].focus_force()
+    weakness_window = tk.Tk()
+    weakness_window.title("Weaknesses")
+    schools = ["Balance", "Storm", "Fire", "Life", "Death", "Ice", "Myth"]
+    weak_schools = {}
+    weakness_entries = []
+    tk.Label(weakness_window, text="If the enemy makes a 200 damage storm spell do 250 damage:\n"
+                                   "The storm entry should be 25 (200 * 1.25 = 250)").grid(row=0)
+    for index in range(len(schools)):
+        x = w.Entry("Percent damage increase from weakness", master=weakness_window, width=40)
+        x.grid(row=index+1, column=1)
+        weakness_entries.append(x)
+    for index, school in enumerate(schools):
+        tk.Label(master=weakness_window, text=school).grid(row=index+1, column=0)
+    w.Button(master=weakness_window, text="Submit", command=submit).grid(row=len(schools) + 2, columnspan=2)
+
+    weakness_window.mainloop()
+    return weak_schools
+
+
+def enemy_resistance():
+    def submit():
+        curr_index = 0
+        try:
+            for entry_index, entry in enumerate(resistance_entries):
+                curr_index = entry_index
+                if int(entry.get()) != 0:
+                    resistance_schools[schools[entry_index]] = int(entry.get())
+            resistance_window.destroy()
+        except ValueError:
+            messagebox.showerror("Error", "Percentage should be an integer")
+            resistance_entries[curr_index].focus_force()
+    resistance_window = tk.Tk()
+    resistance_window.title("Resistances")
+    schools = ["Balance", "Storm", "Fire", "Life", "Death", "Ice", "Myth"]
+    resistance_schools = {}
+    resistance_entries = []
+    tk.Label(resistance_window, text="If the enemy makes a 200 damage storm spell do 150 damage:\n"
+                                     "The storm entry should be 25 (200 * (1-0.25) = 150)").grid(row=0)
+    for index in range(len(schools)):
+        x = w.Entry("Percent damage decrease from weakness", master=resistance_window, width=40)
+        x.grid(row=index+1, column=1)
+        resistance_entries.append(x)
+    for index, school in enumerate(schools):
+        tk.Label(master=resistance_window, text=school).grid(row=index+1, column=0)
+    w.Button(master=resistance_window, text="Submit", command=submit).grid(row=len(schools) + 2, columnspan=2)
+
+    resistance_window.mainloop()
+    return resistance_schools
 
 
 def simulator(standard_buffed: list[BuffedS.BuffedStandard],

@@ -33,8 +33,9 @@ def creation_standard():  # creates the form for a standard spell addition
                 multi_target = False
             else:
                 multi_target = True
+            school = school_value.get()
 
-            StS.StandardSpells(name, cost, multi_target, min_dam, max_dam)
+            StS.StandardSpells(name, cost, multi_target, school, min_dam, max_dam)
         except ValueError:
             match state:
                 case 0:
@@ -66,12 +67,15 @@ def creation_standard():  # creates the form for a standard spell addition
     max_dam_entry = w.Entry(default_text="Maximum damage", master=c_standard, width=30)
     # entry widget for maximum damage of spell
     max_dam_entry.grid(row=3)
+    school_value = tk.StringVar(c_standard, "Select a school")
+    school_menu = tk.OptionMenu(c_standard, school_value, *schools)
+    school_menu.grid(row=4)
     targets = tk.IntVar(master=c_standard, value=3)  # variable for how many targets radio button is checked
-    tk.Radiobutton(master=c_standard, text="Single Target", variable=targets, value=1).grid(row=4)
+    tk.Radiobutton(master=c_standard, text="Single Target", variable=targets, value=1).grid(row=5)
     # ^single target radio button
-    tk.Radiobutton(master=c_standard, text="Multiple Targets", variable=targets, value=2).grid(row=5)
+    tk.Radiobutton(master=c_standard, text="Multiple Targets", variable=targets, value=2).grid(row=6)
     # ^multi target radio button
-    w.Button(master=c_standard, text="submit", state=tk.DISABLED, command=submission).grid(row=6)
+    w.Button(master=c_standard, text="submit", menu_var=school_value, state=tk.DISABLED, command=submission).grid(row=7)
     # ^submission disabled till entries filled out
 
 
@@ -84,7 +88,8 @@ def creation_per_pip():
                 multi_target = False
             else:
                 multi_target = True
-            MpS.MultiplierSpells(name, multi_target, multiplier)
+            school = school_value.get()
+            MpS.MultiplierSpells(name, multi_target, school, multiplier)
         except ValueError:
             messagebox.showerror("Error", "Multiplier must be a number")
 
@@ -98,12 +103,15 @@ def creation_per_pip():
     multiplier_entry = w.Entry("Damage per pip", master=c_pip, width=30)
     # entry widget for the multiplier of spell
     multiplier_entry.grid(row=1)
+    school_value = tk.StringVar(c_pip, "Select a school")
+    school_menu = tk.OptionMenu(c_pip, school_value, *schools)
+    school_menu.grid(row=2)
     targets = tk.IntVar(master=c_pip, value=3)  # variable for how many targets radio button is checked
-    tk.Radiobutton(master=c_pip, text="Single Target", variable=targets, value=1).grid(row=2)
+    tk.Radiobutton(master=c_pip, text="Single Target", variable=targets, value=1).grid(row=3)
     # ^single target radio button
-    tk.Radiobutton(master=c_pip, text="Multiple Targets", variable=targets, value=2).grid(row=3)
+    tk.Radiobutton(master=c_pip, text="Multiple Targets", variable=targets, value=2).grid(row=4)
     # ^multi target radio button
-    w.Button(radio_var=targets, master=c_pip, text="Submit", state=tk.DISABLED, command=submission).grid(row=4)
+    w.Button(radio_var=targets, menu_var=school_value, master=c_pip, text="Submit", state=tk.DISABLED, command=submission).grid(row=5)
     # button widget for submitting the spell
 
 
@@ -122,7 +130,9 @@ def creation_percent_blade():
                 multi_target = False
             else:
                 multi_target = True
-            PerB.PercentBuff(name, cost, multi_target, percent)
+            state = 3
+            school = school_value.get()
+            PerB.PercentBuff(name, cost, multi_target, school, percent)
         except ValueError:
             if state == 0:
                 messagebox.showerror("Error", "Cost must be an integer.")
@@ -130,7 +140,7 @@ def creation_percent_blade():
             elif state == 1:
                 messagebox.showerror("Error", "Percent buff must be an integer.")
                 percent_entry.focus_force()
-            else:
+            elif state == 3:
                 messagebox.showerror("Error", "percent buff must be between 1% and 100%")
                 percent_entry.focus_force()
 
@@ -144,9 +154,12 @@ def creation_percent_blade():
     tk.Label(master=c_percent, text="If the spell increases damage by 50% percent buff should be 50").grid(row=2)
     percent_entry = w.Entry("percent buff", master=c_percent, width=30)
     percent_entry.grid(row=3)
+    school_value = tk.StringVar(c_percent, "Select a school")
+    school_menu = tk.OptionMenu(c_percent, school_value, *schools)
+    school_menu.grid(row=4)
     targets = tk.IntVar(master=c_percent, value=3)  # variable for how many targets radio button is checked
-    tk.Radiobutton(master=c_percent, text="Single Target", variable=targets, value=1).grid(row=4)
+    tk.Radiobutton(master=c_percent, text="Single Target", variable=targets, value=1).grid(row=5)
     # ^single target radio button
-    tk.Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=5)
+    tk.Radiobutton(master=c_percent, text="Multiple Targets", variable=targets, value=2).grid(row=6)
     # ^multi target radio button
-    w.Button(master=c_percent, text="submit", state=tk.DISABLED, command=submission).grid(row=6)
+    w.Button(master=c_percent, text="submit", state=tk.DISABLED, menu_var=school_value, command=submission).grid(row=7)

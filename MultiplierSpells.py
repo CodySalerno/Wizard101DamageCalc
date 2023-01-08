@@ -6,9 +6,9 @@ class MultiplierSpells(Gs):
     needs a name (str),
     whether it applies to all enemies(true) or just one enemy (false)
     and the multiplier each pips increases the damage by (float)"""
-    def __init__(self, name: str, multi_target: bool, multiplier: float):
+    def __init__(self, name: str, multi_target: bool, school: str, multiplier: float):
         from file_handler import add_to_file
-        super().__init__(spell_type="Multiplier", name=name, multi_target=multi_target)
+        super().__init__(spell_type="Multiplier", name=name, multi_target=multi_target, school=school)
         self.multiplier = multiplier
         self.dict["Multiplier"] = self.multiplier
         add_to_file(self)
