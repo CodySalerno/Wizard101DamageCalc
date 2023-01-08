@@ -31,8 +31,13 @@ class Entry(tkinter.Entry):  # Child class of Entry, adds default text support a
 
 class Button(tkinter.Button):  # Child class of Button
     # adds support for easily enabling button if all entry widgets filled out
-    def __init__(self, radio_var=None, *args, **kwargs):
+    def __init__(self, radio_var=None, menu_var=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.menu_var = menu_var
+        if self.menu_var is None:
+            self.menu_val = -1
+        else:
+            self.menu_val = menu_var.get()
         self.radio_var = radio_var  # the variable that keeps track of which radio button is clicked
         if self.radio_var is None:  # if no variable is given (i.e. no radio buttons affect this button)
             self.radio_val = -1
@@ -40,24 +45,26 @@ class Button(tkinter.Button):  # Child class of Button
             self.radio_val = radio_var.get()  # finds the value the variable has when this button is created
             # TODO: give the variable an attribute for its default value instead of this method.
             # TODO: Current method may cause an issue if button created after value changed. Hasn't happened yet.
-        self.bind("<Enter>", lambda event: self.on_enter(self.radio_val))
+        self.bind("<Enter>", lambda event: self.on_enter(self.radio_val, self.menu_val))
         # ^adds a bind for whenever you hover the button to check entry widgets
         # ^lambda has to take in argument but isn't needed in on_enter function
 
-    def on_enter(self, default_radio):
+    def on_enter(self, default_radio, default_menu):
         entry_pass = True  # flag
         radio_pass = True  # flag
+        menu_pass = True  # flag
         for widgets in self.master.winfo_children():  # iterates through sibling widgets
             if widgets.winfo_class() == "Entry":  # checks if class is entry (add text)
                 if widgets.get() == widgets.default_text or widgets.get() == "":  # if default text or blank text
                     entry_pass = False  # trigger flag
                     break  # no need to continue iterations
         if default_radio != -1:  # checks if class is radio button
-            if self.radio_var.get() != default_radio:
-                radio_pass = True
-        else:
-            radio_pass = True
-        if entry_pass and radio_pass:  # if flag not triggered
+            if self.radio_var.get() == default_radio:
+                radio_pass = False
+        if default_menu != -1:
+            if self.menu_var.get() == default_menu:
+                menu_pass = False
+        if entry_pass and radio_pass and menu_pass:  # if flag not triggered
             self["state"] = "normal"  # sets button to be clickable
         else:
             self["state"] = "disabled"

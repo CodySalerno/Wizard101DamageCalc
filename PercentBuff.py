@@ -8,9 +8,9 @@ class PercentBuff(Gs):
     whether it applies to all enemies/self (true) or just one enemy (false)
     and the percentage buff applied (int).
     e.g. a buff that makes a 10 damage spell do 15 should have a percentage buff argument of 50."""
-    def __init__(self, name: str, cost: int, multi_target: bool, percent: int):
+    def __init__(self, name: str, cost: int, multi_target: bool, school: str, percent: int):
         from file_handler import add_to_file
-        super().__init__(spell_type="Percent Buff", name=name, multi_target=multi_target)
+        super().__init__(spell_type="Percent Buff", name=name, multi_target=multi_target, school=school)
         self.cost = cost
         self.percent = percent
         self.dict["Cost"] = self.cost
