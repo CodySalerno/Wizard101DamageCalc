@@ -130,7 +130,6 @@ def creation_percent_blade():
                 multi_target = False
             else:
                 multi_target = True
-            state = 3
             school = school_value.get()
             PerB.PercentBuff(name, cost, multi_target, school, percent)
         except ValueError:
@@ -140,7 +139,7 @@ def creation_percent_blade():
             elif state == 1:
                 messagebox.showerror("Error", "Percent buff must be an integer.")
                 percent_entry.focus_force()
-            elif state == 3:
+            elif state == 2:
                 messagebox.showerror("Error", "percent buff must be between 1% and 100%")
                 percent_entry.focus_force()
 
