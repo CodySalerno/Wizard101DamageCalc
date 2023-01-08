@@ -16,37 +16,6 @@ def creation():  # creates the form for choosing what type of spell
     creator.mainloop()
 
 
-def creation_per_pip():
-    def submission():
-        try:
-            name = name_entry.get()
-            multiplier = float(multiplier_entry.get())
-            if targets.get() == 1:
-                multi_target = False
-            else:
-                multi_target = True
-            MpS.MultiplierSpells(name, multi_target, multiplier)
-        except ValueError:
-            messagebox.showerror("Error", "Multiplier must be a number")
-
-    c_pip = tk.Tk()
-    c_pip.title("Creating a per pip damage spell")
-    name_entry = w.Entry("name", master=c_pip, width=30)
-    # entry widget for name of spell
-    name_entry.grid(row=0)
-    name_entry.focus_force()  # gives this entry focus first
-    multiplier_entry = w.Entry("Damage per pip", master=c_pip, width=30)
-    # entry widget for the multiplier of spell
-    multiplier_entry.grid(row=1)
-    targets = tk.IntVar(master=c_pip, value=3)  # variable for how many targets radio button is checked
-    tk.Radiobutton(master=c_pip, text="Single Target", variable=targets, value=1).grid(row=2)
-    # ^single target radio button
-    tk.Radiobutton(master=c_pip, text="Multiple Targets", variable=targets, value=2).grid(row=3)
-    # ^multi target radio button
-    w.Button(radio_var=targets, master=c_pip, text="Submit", state=tk.DISABLED, command=submission).grid(row=4)
-    # button widget for submitting the spell
-
-
 def creation_standard():  # creates the form for a standard spell addition
     def submission():
         state = 0
@@ -81,6 +50,7 @@ def creation_standard():  # creates the form for a standard spell addition
                     messagebox.showerror("Error", "Minimum damage must be less than or equal to maximum damage")
                     min_dam_entry.focus_force()
 
+    schools = ["Balance", "Storm", "Fire", "Life", "Death", "Ice", "Myth"]
     c_standard = tk.Tk()
     c_standard.title("Creating a standard damage spell")
     name_entry = w.Entry("name", master=c_standard, width=30)
@@ -103,6 +73,38 @@ def creation_standard():  # creates the form for a standard spell addition
     # ^multi target radio button
     w.Button(master=c_standard, text="submit", state=tk.DISABLED, command=submission).grid(row=6)
     # ^submission disabled till entries filled out
+
+
+def creation_per_pip():
+    def submission():
+        try:
+            name = name_entry.get()
+            multiplier = float(multiplier_entry.get())
+            if targets.get() == 1:
+                multi_target = False
+            else:
+                multi_target = True
+            MpS.MultiplierSpells(name, multi_target, multiplier)
+        except ValueError:
+            messagebox.showerror("Error", "Multiplier must be a number")
+
+    schools = ["Balance", "Storm", "Fire", "Life", "Death", "Ice", "Myth"]
+    c_pip = tk.Tk()
+    c_pip.title("Creating a per pip damage spell")
+    name_entry = w.Entry("name", master=c_pip, width=30)
+    # entry widget for name of spell
+    name_entry.grid(row=0)
+    name_entry.focus_force()  # gives this entry focus first
+    multiplier_entry = w.Entry("Damage per pip", master=c_pip, width=30)
+    # entry widget for the multiplier of spell
+    multiplier_entry.grid(row=1)
+    targets = tk.IntVar(master=c_pip, value=3)  # variable for how many targets radio button is checked
+    tk.Radiobutton(master=c_pip, text="Single Target", variable=targets, value=1).grid(row=2)
+    # ^single target radio button
+    tk.Radiobutton(master=c_pip, text="Multiple Targets", variable=targets, value=2).grid(row=3)
+    # ^multi target radio button
+    w.Button(radio_var=targets, master=c_pip, text="Submit", state=tk.DISABLED, command=submission).grid(row=4)
+    # button widget for submitting the spell
 
 
 def creation_percent_blade():
@@ -131,6 +133,8 @@ def creation_percent_blade():
             else:
                 messagebox.showerror("Error", "percent buff must be between 1% and 100%")
                 percent_entry.focus_force()
+
+    schools = ["Balance", "Storm", "Fire", "Life", "Death", "Ice", "Myth"]
     c_percent = tk.Tk()
     c_percent.title("Creating a percent damage buff spell")
     name_entry = w.Entry("name", master=c_percent, width=30)
