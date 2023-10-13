@@ -1,8 +1,8 @@
 import os
 import pickle
-from StandardSpells import StandardSpells
-from MultiplierSpells import MultiplierSpells
-from PercentBuff import PercentBuff
+from Spells.Attack_Spells.StandardSpells import StandardSpells
+from Spells.Attack_Spells.MultiplierSpells import MultiplierSpells
+from Spells.Buff_Spells.PercentBuff import PercentBuff
 from tkinter import messagebox
 
 std_dir = "%APPDATA%/Wiz101Calc"

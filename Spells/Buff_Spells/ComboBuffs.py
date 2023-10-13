@@ -1,4 +1,4 @@
-import PercentBuff as PercB
+import Spells.Buff_Spells.PercentBuff as PercB
 
 
 class ComboBuff:

@@ -1,16 +1,16 @@
 import sys
 
-import MultiplierSpells as MultiS
-import PercentBuff as PercB
-import StandardSpells as StandardS
-import ComboBuffs as ComboB
-import BuffedSpell as BuffedS
+import Spells.Attack_Spells.MultiplierSpells as MultiS
+import Spells.Buff_Spells.PercentBuff as PercB
+import Spells.Attack_Spells.StandardSpells as StandardS
+import Spells.Buff_Spells.ComboBuffs as ComboB
+import Spells.Attack_Spells.BuffedSpell as BuffedS
 import file_handler as fh
 import more_itertools
 import tkinter as tk
 from tkinter import messagebox
 import widgets as w
-from Enemy import Enemy
+from Enemy.Enemy import Enemy
 
 
 def create_buff_and_spell_lists():

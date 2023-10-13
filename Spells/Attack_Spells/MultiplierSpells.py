@@ -1,4 +1,4 @@
-from GenericSpells import GenericSpells as Gs
+from Spells.GenericSpells import GenericSpells as Gs
 
 
 class MultiplierSpells(Gs):

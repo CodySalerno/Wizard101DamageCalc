@@ -1,6 +1,6 @@
-from ComboBuffs import ComboBuff
-from StandardSpells import StandardSpells
-from MultiplierSpells import MultiplierSpells
+from Spells.Buff_Spells.ComboBuffs import ComboBuff
+from Spells.Attack_Spells.StandardSpells import StandardSpells
+from Spells.Attack_Spells.MultiplierSpells import MultiplierSpells
 import abc
 
 

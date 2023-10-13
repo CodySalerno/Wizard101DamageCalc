@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
-import StandardSpells as StS
-import MultiplierSpells as MpS
-import PercentBuff as PerB
+import Spells.Attack_Spells.StandardSpells as StS
+import Spells.Attack_Spells.MultiplierSpells as MpS
+import Spells.Buff_Spells.PercentBuff as PerB
 import widgets as w
 
 
