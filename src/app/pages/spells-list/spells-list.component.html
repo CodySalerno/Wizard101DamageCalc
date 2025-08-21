@@ -1,1 +1,85 @@
-<p>Spells lists works!</p>
+<section style="max-width:900px;margin:24px auto;">
+  <h2>Spells List</h2>
+  <form (ngSubmit)="applyFilters()" style="display:grid;gap:8px;margin-bottom:16px;">
+    <div>
+        <label>Schools:</label>
+        <div>
+            <ng-container *ngFor="let school of SCHOOLS">
+                <input
+                type="checkbox"
+                [id]="'school-' + school"
+                [checked]="selectedSchools.includes(school)"
+                (change)="onSchoolToggle($event, school)"
+                />
+            <label [for]="'school-' + school" style="margin-right:12px">{{ school }}</label>
+        </ng-container>
+        </div>
+        <label>Types:</label>
+        <div>
+            <ng-container *ngFor="let type of TYPES">
+                <input
+                type="checkbox"
+                [id]="'type-' + type"
+                [checked]="selectedTypes.includes(type)"
+                (change)="onTypeToggle($event, type)"
+                />
+            <label [for]="'type-' + type" style="margin-right:12px">{{ type }}</label>
+            </ng-container>
+        </div>
+        <div>
+            <label>Multi-Target:</label>
+            <input type="checkbox" 
+            [id]="'multiTarget'"
+            [(ngModel)]="multiTargetFilter"
+            name="asdf"/>
+        </div>
+        <div>
+            <label>Min Damage: <input type="number" [(ngModel)]="minFlatDamage" name="minDamage"></label>
+            <label>Max Damage: <input type="number" [(ngModel)]="maxFlatDamage" name="maxDamage"></label><br>
+            <label>Min Pip: <input type="number" [(ngModel)]="minPipCost" name="minPip"></label>
+            <label>Max Pip: <input type="number" [(ngModel)]="maxPipCost" name="maxPip"></label><br>
+            <label>Min Pip Damage Multiplier: <input type="number" [(ngModel)]="minMultiplier" name="minMultiplier"></label>
+            <label>Max Pip Damage Multiplier: <input type="number" [(ngModel)]="maxMultiplier" name="maxMultiplier"></label><br>
+            <label>Min Percent increase: <input type="number" [(ngModel)]="minPercentBuff" name="minPercentBuff"></label>
+            <label>Max Percent increase: <input type="number" [(ngModel)]="maxPercentBuff" name="maxPercentBuff"></label><br>
+        </div>
+
+    </div>
+    <button type="submit">Apply Filters</button>
+  </form>
+
+
+  <table border="1" style="width:100%;border-collapse:collapse;">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>School</th>
+        <th>Multi-Target</th>
+        <th>Cost</th>
+        <th>Min</th>
+        <th>Max</th>
+        <th>Multiplier</th>
+        <th>Percent</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let spell of filteredSpells">
+        <td>{{spell.name}}</td>
+        <td>{{spell.type}}</td>
+        <td>{{spell.school}}</td>
+        <td>{{spell.multiTarget ? 'Yes' : 'No'}}</td>
+        <td *ngIf="spell.type === 'Standard' || spell.type === 'Percent Buff'">{{spell.cost}}</td>
+        <td *ngIf="spell.type !== 'Standard' && spell.type !== 'Percent Buff'"></td>
+        <td *ngIf="spell.type === 'Standard'">{{spell.minDam}}</td>
+        <td *ngIf="spell.type !== 'Standard'"></td>
+        <td *ngIf="spell.type === 'Standard'">{{spell.maxDam}}</td>
+        <td *ngIf="spell.type !== 'Standard'"></td>
+        <td *ngIf="spell.type === 'Multiplier'">{{spell.multiplier}}</td>
+        <td *ngIf="spell.type !== 'Multiplier'"></td>
+        <td *ngIf="spell.type === 'Percent Buff'">{{spell.percent}}</td>
+        <td *ngIf="spell.type !== 'Percent Buff'"></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
