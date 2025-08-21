@@ -8,27 +8,32 @@
       <option>Percent Buff</option>
     </select>
   </label>
-
+<!-- Name of the spell -->
   <label>Name <input [(ngModel)]="name" name="name"></label>
 
+<!-- School of the spell -->
   <label>School
     <select [(ngModel)]="school" name="school">
-      <option *ngFor="let s of schools">{{s}}</option>
+      <option *ngFor="let s of SCHOOLS">{{s}}</option>
     </select>
   </label>
 
+<!-- Single target or all targets -->
   <label><input type="checkbox" [(ngModel)]="multiTarget" name="mt"> Multi-target</label>
 
+<!-- Regular spells like storm snake -->
   <div *ngIf="type==='Standard'" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
     <label>Cost <input type="number" [(ngModel)]="cost" name="cost"></label>
     <label>Min <input type="number" [(ngModel)]="minDam" name="min"></label>
     <label>Max <input type="number" [(ngModel)]="maxDam" name="max"></label>
   </div>
 
+<!-- Spells that do damage based on number of pips you have -->
   <div *ngIf="type==='Multiplier'">
     <label>Damage per Pip <input type="number" [(ngModel)]="multiplier" name="mult"></label>
   </div>
 
+<!-- Spells that buff your next attack by a percentage -->
   <div *ngIf="type==='Percent Buff'" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
     <label>Cost <input type="number" [(ngModel)]="cost" name="pcost"></label>
     <label>Percent % <input type="number" [(ngModel)]="percent" name="percent"></label>

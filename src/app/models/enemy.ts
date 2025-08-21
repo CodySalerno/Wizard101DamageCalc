@@ -1,4 +1,4 @@
-import { School } from "./spells";
+import { School } from "../constants/schools";
 
 export interface Enemy {
   name: string;

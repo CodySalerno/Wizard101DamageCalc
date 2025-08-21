@@ -1,4 +1,4 @@
-export type School = "Balance" | "Storm" | "Fire" | "Life" | "Death" | "Ice" | "Myth";
+import { School } from "../constants/schools";
 
 export interface GenericSpell {
   name: string;
