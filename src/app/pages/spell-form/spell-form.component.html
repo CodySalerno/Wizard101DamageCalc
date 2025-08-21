@@ -1,0 +1,38 @@
+<section style="max-width:720px;margin:24px auto;display:grid;gap:12px">
+  <h2>Create New Spell</h2>
+
+  <label>Type
+    <select [(ngModel)]="type" name="type">
+      <option>Standard</option>
+      <option>Multiplier</option>
+      <option>Percent Buff</option>
+    </select>
+  </label>
+
+  <label>Name <input [(ngModel)]="name" name="name"></label>
+
+  <label>School
+    <select [(ngModel)]="school" name="school">
+      <option *ngFor="let s of schools">{{s}}</option>
+    </select>
+  </label>
+
+  <label><input type="checkbox" [(ngModel)]="multiTarget" name="mt"> Multi-target</label>
+
+  <div *ngIf="type==='Standard'" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+    <label>Cost <input type="number" [(ngModel)]="cost" name="cost"></label>
+    <label>Min <input type="number" [(ngModel)]="minDam" name="min"></label>
+    <label>Max <input type="number" [(ngModel)]="maxDam" name="max"></label>
+  </div>
+
+  <div *ngIf="type==='Multiplier'">
+    <label>Damage per Pip <input type="number" [(ngModel)]="multiplier" name="mult"></label>
+  </div>
+
+  <div *ngIf="type==='Percent Buff'" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+    <label>Cost <input type="number" [(ngModel)]="cost" name="pcost"></label>
+    <label>Percent % <input type="number" [(ngModel)]="percent" name="percent"></label>
+  </div>
+
+  <button class="btn" (click)="save()">Save</button>
+</section>
