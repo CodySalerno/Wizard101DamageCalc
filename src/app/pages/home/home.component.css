@@ -1,0 +1,32 @@
+.home-hero {
+  display: grid;
+  place-items: center;
+  padding: clamp(24px, 5vw, 48px) 16px;
+}
+
+.home-hero .panel {
+  width: min(900px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: clamp(20px, 4vw, 28px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+.home-hero h1 {
+  margin: 0 0 10px;
+  font-size: clamp(28px, 3.2vw, 36px);
+  font-weight: 800;
+}
+
+.home-hero .muted {
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+
+/* grid for the three actions */
+.actions {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}

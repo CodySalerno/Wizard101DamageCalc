@@ -1,85 +1,161 @@
-<section style="max-width:900px;margin:24px auto;">
-  <h2>Spells List</h2>
-  <form (ngSubmit)="applyFilters()" style="display:grid;gap:8px;margin-bottom:16px;">
-    <div>
-        <label>Schools:</label>
-        <div>
-            <ng-container *ngFor="let school of SCHOOLS">
-                <input
-                type="checkbox"
-                [id]="'school-' + school"
-                [checked]="selectedSchools.includes(school)"
-                (change)="onSchoolToggle($event, school)"
-                />
-            <label [for]="'school-' + school" style="margin-right:12px">{{ school }}</label>
-        </ng-container>
+<section class="spells-page">
+  <h2 class="spells-title">Spells List</h2>
+
+  <form (ngSubmit)="applyFilters()" novalidate class="spells-form">
+    <div class="filters">
+
+      <!-- Schools -->
+      <fieldset class="card">
+        <legend class="card__title">Schools</legend>
+        <div class="pills">
+          <ng-container *ngFor="let school of SCHOOLS">
+            <input
+              class="pill-input"
+              type="checkbox"
+              [id]="'school-' + school"
+              [checked]="selectedSchools.includes(school)"
+              (change)="onSchoolToggle($event, school)"
+            />
+            <label
+              class="pill pill--school pill--{{ school | lowercase }}"
+              [for]="'school-' + school"
+            >
+              {{ school }}
+            </label>
+          </ng-container>
         </div>
-        <label>Types:</label>
-        <div>
-            <ng-container *ngFor="let type of TYPES">
-                <input
+      </fieldset>
+
+      <!-- Types -->
+      <fieldset class="card">
+        <legend class="card__title">Types</legend>
+        <div class="type-list">
+          <ng-container *ngFor="let type of TYPES">
+            <label class="check">
+              <input
+                class="check__input"
                 type="checkbox"
                 [id]="'type-' + type"
                 [checked]="selectedTypes.includes(type)"
                 (change)="onTypeToggle($event, type)"
-                />
-            <label [for]="'type-' + type" style="margin-right:12px">{{ type }}</label>
-            </ng-container>
+              />
+              <span class="check__label">{{ type }}</span>
+            </label>
+          </ng-container>
         </div>
-        <div>
-            <label>Multi-Target:</label>
-            <input type="checkbox" 
-            [id]="'multiTarget'"
-            [(ngModel)]="multiTargetFilter"
-            name="asdf"/>
-        </div>
-        <div>
-            <label>Min Damage: <input type="number" [(ngModel)]="minFlatDamage" name="minDamage"></label>
-            <label>Max Damage: <input type="number" [(ngModel)]="maxFlatDamage" name="maxDamage"></label><br>
-            <label>Min Pip: <input type="number" [(ngModel)]="minPipCost" name="minPip"></label>
-            <label>Max Pip: <input type="number" [(ngModel)]="maxPipCost" name="maxPip"></label><br>
-            <label>Min Pip Damage Multiplier: <input type="number" [(ngModel)]="minMultiplier" name="minMultiplier"></label>
-            <label>Max Pip Damage Multiplier: <input type="number" [(ngModel)]="maxMultiplier" name="maxMultiplier"></label><br>
-            <label>Min Percent increase: <input type="number" [(ngModel)]="minPercentBuff" name="minPercentBuff"></label>
-            <label>Max Percent increase: <input type="number" [(ngModel)]="maxPercentBuff" name="maxPercentBuff"></label><br>
-        </div>
+      </fieldset>
 
+      <!-- Multi-target only -->
+      <label class="check check--inline mt-12">
+        <input
+          class="check__input"
+          type="checkbox"
+          id="multiTarget"
+          [(ngModel)]="multiTargetFilter"
+          name="multiTarget"
+          aria-label="Only show multi-target spells"
+        />
+        <span class="check__label">Multi-Target only</span>
+      </label>
+
+      <!-- Numeric filters -->
+      <div class="filters-grid">
+        <label class="field">
+          <span class="field__label">Min Damage</span>
+          <input class="field__input" type="number" [(ngModel)]="minFlatDamage" name="minDamage" inputmode="numeric">
+        </label>
+        <label class="field">
+          <span class="field__label">Max Damage</span>
+          <input class="field__input" type="number" [(ngModel)]="maxFlatDamage" name="maxDamage" inputmode="numeric">
+        </label>
+        <label class="field">
+          <span class="field__label">Min Pip</span>
+          <input class="field__input" type="number" [(ngModel)]="minPipCost" name="minPip" inputmode="numeric">
+        </label>
+        <label class="field">
+          <span class="field__label">Max Pip</span>
+          <input class="field__input" type="number" [(ngModel)]="maxPipCost" name="maxPip" inputmode="numeric">
+        </label>
+        <label class="field">
+          <span class="field__label">Min Multiplier</span>
+          <input class="field__input" type="number" [(ngModel)]="minMultiplier" name="minMultiplier" inputmode="decimal">
+        </label>
+        <label class="field">
+          <span class="field__label">Max Multiplier</span>
+          <input class="field__input" type="number" [(ngModel)]="maxMultiplier" name="maxMultiplier" inputmode="decimal">
+        </label>
+        <label class="field">
+          <span class="field__label">Min % Increase</span>
+          <input class="field__input" type="number" [(ngModel)]="minPercentBuff" name="minPercentBuff" inputmode="numeric">
+        </label>
+        <label class="field">
+          <span class="field__label">Max % Increase</span>
+          <input class="field__input" type="number" [(ngModel)]="maxPercentBuff" name="maxPercentBuff" inputmode="numeric">
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+        <button type="button" class="btn" (click)="resetFilters()">Reset</button>
+      </div>
     </div>
-    <button type="submit">Apply Filters</button>
   </form>
 
+  <div class="sr" aria-live="polite">
+    Showing {{ filteredSpells.length }} of {{ spells.length }} spells
+  </div>
 
-  <table border="1" style="width:100%;border-collapse:collapse;">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>School</th>
-        <th>Multi-Target</th>
-        <th>Cost</th>
-        <th>Min</th>
-        <th>Max</th>
-        <th>Multiplier</th>
-        <th>Percent</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let spell of filteredSpells">
-        <td>{{spell.name}}</td>
-        <td>{{spell.type}}</td>
-        <td>{{spell.school}}</td>
-        <td>{{spell.multiTarget ? 'Yes' : 'No'}}</td>
-        <td *ngIf="spell.type === 'Standard' || spell.type === 'Percent Buff'">{{spell.cost}}</td>
-        <td *ngIf="spell.type !== 'Standard' && spell.type !== 'Percent Buff'"></td>
-        <td *ngIf="spell.type === 'Standard'">{{spell.minDam}}</td>
-        <td *ngIf="spell.type !== 'Standard'"></td>
-        <td *ngIf="spell.type === 'Standard'">{{spell.maxDam}}</td>
-        <td *ngIf="spell.type !== 'Standard'"></td>
-        <td *ngIf="spell.type === 'Multiplier'">{{spell.multiplier}}</td>
-        <td *ngIf="spell.type !== 'Multiplier'"></td>
-        <td *ngIf="spell.type === 'Percent Buff'">{{spell.percent}}</td>
-        <td *ngIf="spell.type !== 'Percent Buff'"></td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- centered N/A cells -->
+  <ng-template #naCell>
+    <td class="na">—</td>
+  </ng-template>
+
+  <div *ngIf="filteredSpells.length > 0; else emptyState">
+    <table class="table spells-table">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Type</th>
+          <th scope="col">School</th>
+          <th scope="col">Multi-Target</th>
+          <th scope="col">Cost</th>
+          <th scope="col">Min</th>
+          <th scope="col">Max</th>
+          <th scope="col">Multiplier</th>
+          <th scope="col">Percent</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let spell of filteredSpells">
+          <td>{{ spell.name }}</td>
+          <td>{{ spell.type }}</td>
+          <td>{{ spell.school }}</td>
+          <td>
+            <span class="badge" [class.badge--yes]="spell.multiTarget" [class.badge--no]="!spell.multiTarget">
+              {{ spell.multiTarget ? 'Yes' : 'No' }}
+            </span>
+          </td>
+
+          <!-- Cost -->
+          <td *ngIf="spell.type === 'Standard' || spell.type === 'Percent Buff'; else naCell">
+            {{ spell.cost }}
+          </td>
+
+          <!-- Min / Max (Standard only) -->
+          <td *ngIf="spell.type === 'Standard'; else naCell">{{ spell.minDam }}</td>
+          <td *ngIf="spell.type === 'Standard'; else naCell">{{ spell.maxDam }}</td>
+
+          <!-- Multiplier (Multiplier only) -->
+          <td *ngIf="spell.type === 'Multiplier'; else naCell">{{ spell.multiplier }}</td>
+
+          <!-- Percent (Percent Buff only) -->
+          <td *ngIf="spell.type === 'Percent Buff'; else naCell">{{ spell.percent }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty">No spells match your filters. Try widening your criteria.</div>
+  </ng-template>
 </section>

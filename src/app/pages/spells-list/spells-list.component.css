@@ -1,0 +1,150 @@
+/* ===== Page wrapper ===== */
+.spells-page{
+  color: var(--text, #e5e7eb);
+  background: var(--bg, #0d1117);
+  display: block;
+  min-height: 100%;
+  padding: 12px 16px 32px;
+  font: 14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+.spells-title{ margin: 0 0 12px; font-weight: 700; }
+.mt-12{ margin-top: 12px; }
+
+/* ===== Cards / panels ===== */
+.card{
+  border: 1px solid var(--border, #273244);
+  border-radius: 10px;
+  padding: 10px 12px 12px;
+  background: var(--surface, #111827);
+  margin: 10px 0;
+}
+.card__title{ color: var(--muted, #a1a1aa); padding: 0 6px; font-weight: 600; }
+
+/* ===== Form layout ===== */
+.spells-form .filters{ display: grid; gap: 10px; }
+.filters-grid{
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  margin-top: 6px;
+}
+.actions{ margin-top: 6px; }
+
+/* field (label + input) */
+.field{ display: grid; gap: 6px; }
+.field__label{ color: var(--muted, #a1a1aa); font-size: 12px; }
+.field__input{
+  background: var(--surface-2, #0f172a);
+  border: 1px solid var(--border, #273244);
+  border-radius: 8px;
+  color: var(--text, #e5e7eb);
+  padding: 6px 8px;
+  width: 100%;
+}
+
+/* ===== Checkboxes ===== */
+.check{ display: inline-flex; align-items: center; gap: 8px; margin-right: 12px; }
+.check--inline{ margin-top: 12px; }
+.check__input{ accent-color: #7c8aa6; }
+.check__label{}
+
+/* ===== Pills (schools) ===== */
+.pills{ display: flex; flex-wrap: wrap; }
+.pill-input{
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  border: 0;
+  padding: 0;
+}
+.pill{
+  --swatch: #64748b;
+  --on-swatch: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: 6px 12px;
+  margin: 4px 8px 0 0;
+  border-radius: 9999px;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: var(--swatch);
+  font-weight: 700;
+  letter-spacing: .2px;
+  cursor: pointer;
+  transition: background .14s ease, color .14s ease, box-shadow .14s ease, border-color .14s ease;
+  user-select: none;
+}
+.pill:hover{ box-shadow: 0 0 0 3px color-mix(in oklab, var(--swatch) 30%, transparent); }
+.pill-input:focus-visible + .pill{
+  outline: 2px solid color-mix(in oklab, var(--swatch) 60%, #fff 0%);
+  outline-offset: 2px;
+}
+.pill-input:checked + .pill{
+  background: var(--swatch);
+  color: var(--on-swatch);
+  border-color: transparent;
+}
+
+/* individual school colors */
+.pill--fire    { --swatch:#ef4444; --on-swatch:#ffffff; }
+.pill--ice     { --swatch:#ffffff; --on-swatch:#000000; }
+.pill--storm   { --swatch:#8b5cf6; --on-swatch:#0b061a; }
+.pill--life    { --swatch:#22c55e; --on-swatch:#052e14; }
+.pill--myth    { --swatch:#3b82f6; --on-swatch:#061523; }
+.pill--death   { --swatch:#000000; --on-swatch:#ffffff; }
+.pill--balance { --swatch:#9ca3af; --on-swatch:#0b1117; }
+
+/* ===== Table ===== */
+.table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  background: var(--surface, #111827);
+  border: 1px solid var(--border, #273244);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.table thead th{
+  background: #0b1220;
+  color: #cbd5e1;
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 700;
+  border: 1px solid var(--border, #273244);
+}
+.table tbody td{
+  padding: 10px 12px;
+  border: 1px solid var(--border, #273244);
+}
+.table tbody tr:nth-child(even){ background: rgba(255,255,255,0.02); }
+
+.na{ text-align: center; color: #94a3b8; }
+
+/* ===== Badges (Yes/No) ===== */
+.badge{
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+.badge--yes{
+  background: #065f46;
+  border-color: #0b8b67;
+  color: #ecfeff;
+}
+.badge--no{
+  background: #1f2937;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+/* utils */
+.sr{ color: var(--muted, #a1a1aa); margin: 8px 0 2px; }
+.empty{ color: var(--muted, #a1a1aa); }

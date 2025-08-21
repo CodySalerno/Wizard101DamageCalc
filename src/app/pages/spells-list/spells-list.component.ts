@@ -10,6 +10,7 @@ import { SCHOOLS } from '../../constants/schools';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './spells-list.component.html',
+  styleUrls: ['./spells-list.component.css'],
 })
 export class SpellsListComponent implements OnInit {
   spells: AnySpell[] = [];
@@ -39,17 +40,14 @@ export class SpellsListComponent implements OnInit {
     this.applyFilters();
   }
 
-
   onSchoolToggle(evt: Event, school: string) {
     const checked = (evt.target as HTMLInputElement).checked;
-    console.log('onSchoolToggle', school, checked, evt);
-    
     if (checked) {
       if (!this.selectedSchools.includes(school)) {
         this.selectedSchools = [...this.selectedSchools, school];
       }
     } else {
-      this.selectedSchools = this.selectedSchools.filter(s => s !== school);
+      this.selectedSchools = this.selectedSchools.filter((s) => s !== school);
     }
   }
 
@@ -60,39 +58,54 @@ export class SpellsListComponent implements OnInit {
         this.selectedTypes = [...this.selectedTypes, type];
       }
     } else {
-      this.selectedTypes = this.selectedTypes.filter(t => t !== type);
+      this.selectedTypes = this.selectedTypes.filter((t) => t !== type);
     }
   }
 
   applyFilters() {
-    console.log('Applying filters', this.multiTargetFilter);
-    this.filteredSpells = this.spells.filter(spell => {
-      // School filter
+    this.filteredSpells = this.spells.filter((spell) => {
+      // School
       if (!this.selectedSchools.includes(spell.school)) return false;
-      // Type filter
+      // Type
       if (!this.selectedTypes.includes(spell.type)) return false;
-      // Multi-target filter
+      // Multi-target
       if (this.multiTargetFilter && !spell.multiTarget) return false;
-      // Damage filter (for Standard spells)
+
+      // Damage / cost (Standard)
       if (spell.type === 'Standard') {
         if (this.minFlatDamage !== undefined && spell.minDam < this.minFlatDamage) return false;
         if (this.maxFlatDamage !== undefined && spell.maxDam > this.maxFlatDamage) return false;
         if (this.minPipCost !== undefined && spell.cost < this.minPipCost) return false;
         if (this.maxPipCost !== undefined && spell.cost > this.maxPipCost) return false;
       }
-      // Multiplier filter (damage per pip)
+
+      // Multiplier
       if (spell.type === 'Multiplier') {
         if (this.minMultiplier !== undefined && spell.multiplier < this.minMultiplier) return false;
         if (this.maxMultiplier !== undefined && spell.multiplier > this.maxMultiplier) return false;
       }
-      // Percent Buff filter
+
+      // Percent Buff
       if (spell.type === 'Percent Buff') {
         if (this.minPercentBuff !== undefined && spell.percent < this.minPercentBuff) return false;
         if (this.maxPercentBuff !== undefined && spell.percent > this.maxPercentBuff) return false;
         if (this.minPipCost !== undefined && spell.cost < this.minPipCost) return false;
         if (this.maxPipCost !== undefined && spell.cost > this.maxPipCost) return false;
       }
+
       return true;
     });
+  }
+
+  /* New: convenience reset */
+  resetFilters() {
+    this.selectedSchools = [...this.SCHOOLS];
+    this.selectedTypes = [...this.TYPES];
+    this.multiTargetFilter = false;
+    this.minFlatDamage = this.maxFlatDamage = undefined;
+    this.minMultiplier = this.maxMultiplier = undefined;
+    this.minPercentBuff = this.maxPercentBuff = undefined;
+    this.minPipCost = this.maxPipCost = undefined;
+    this.applyFilters();
   }
 }
