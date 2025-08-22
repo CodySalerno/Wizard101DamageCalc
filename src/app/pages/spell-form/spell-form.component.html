@@ -1,5 +1,10 @@
 <section class="form-page">
-  <div class="panel">
+  <div
+  class="panel"
+  [class.flash-ready]="didInit"
+  [class.flash]="!!flashSchool"
+  [attr.data-school]="flashSchool || school"
+  (animationend)="onFlashEnd()">
     <h2 class="title">Create New Spell</h2>
 
     <!-- Basic fields -->
@@ -20,10 +25,16 @@
 
       <label class="field">
         <span class="field__label">School</span>
-        <select class="field__input" [(ngModel)]="school" name="school">
+        <select
+          class="field__input school-select"
+          [class.flash-ready]="didInit"
+          [(ngModel)]="school"
+          name="school"
+          [attr.data-school]="school">
           <option *ngFor="let s of SCHOOLS">{{ s }}</option>
         </select>
       </label>
+
 
       <label class="check mt-8">
         <input class="check__input" type="checkbox" [(ngModel)]="multiTarget" name="mt" />

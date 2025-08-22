@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DbService } from '../../services/db.service';
@@ -17,7 +17,7 @@ const isNonNegativeInteger = (val: any): val is number =>
   styleUrls: ['./spell-form.component.css']
 })
 
-export class SpellFormComponent {
+export class SpellFormComponent implements AfterViewInit{
   type: 'Standard'|'Multiplier'|'Percent Buff' = 'Standard';
   name = '';
   school: School = 'Balance'; // TODO: Add preference setting for default school
@@ -28,6 +28,16 @@ export class SpellFormComponent {
   percent?: number;
   multiTarget = false;
   SCHOOLS = SCHOOLS;
+  didInit = false;
+  flashSchool: School | null = null;
+
+  ngAfterViewInit() {
+    setTimeout(() => (this.didInit = true));
+  }
+
+  onFlashEnd() {
+    this.flashSchool = null;
+  }
 
   constructor(private db: DbService) {}
 
@@ -69,6 +79,6 @@ export class SpellFormComponent {
     await this.db.upsertSpell(payload);
     this.name = ''; this.cost = this.minDam = this.maxDam = undefined;
     this.multiplier = this.percent = undefined;
-    alert('Saved!');
+    this.flashSchool = this.school;
   }
 }
