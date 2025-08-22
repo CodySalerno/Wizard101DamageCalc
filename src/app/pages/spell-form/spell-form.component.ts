@@ -14,6 +14,7 @@ const isNonNegativeInteger = (val: any): val is number =>
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './spell-form.component.html',
+  styleUrls: ['./spell-form.component.css']
 })
 
 export class SpellFormComponent {

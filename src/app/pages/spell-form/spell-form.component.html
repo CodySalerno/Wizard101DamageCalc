@@ -1,43 +1,74 @@
-<section style="max-width:720px;margin:24px auto;display:grid;gap:12px">
-  <h2>Create New Spell</h2>
+<section class="form-page">
+  <div class="panel">
+    <h2 class="title">Create New Spell</h2>
 
-  <label>Type
-    <select [(ngModel)]="type" name="type">
-      <option>Standard</option>
-      <option>Multiplier</option>
-      <option>Percent Buff</option>
-    </select>
-  </label>
-<!-- Name of the spell -->
-  <label>Name <input [(ngModel)]="name" name="name"></label>
+    <!-- Basic fields -->
+    <div class="form-grid">
+      <label class="field">
+        <span class="field__label">Type</span>
+        <select class="field__input" [(ngModel)]="type" name="type">
+          <option>Standard</option>
+          <option>Multiplier</option>
+          <option>Percent Buff</option>
+        </select>
+      </label>
 
-<!-- School of the spell -->
-  <label>School
-    <select [(ngModel)]="school" name="school">
-      <option *ngFor="let s of SCHOOLS">{{s}}</option>
-    </select>
-  </label>
+      <label class="field">
+        <span class="field__label">Name</span>
+        <input class="field__input" [(ngModel)]="name" name="name" />
+      </label>
 
-<!-- Single target or all targets -->
-  <label><input type="checkbox" [(ngModel)]="multiTarget" name="mt"> Multi-target</label>
+      <label class="field">
+        <span class="field__label">School</span>
+        <select class="field__input" [(ngModel)]="school" name="school">
+          <option *ngFor="let s of SCHOOLS">{{ s }}</option>
+        </select>
+      </label>
 
-<!-- Regular spells like storm snake -->
-  <div *ngIf="type==='Standard'" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-    <label>Cost <input type="number" [(ngModel)]="cost" name="cost"></label>
-    <label>Min <input type="number" [(ngModel)]="minDam" name="min"></label>
-    <label>Max <input type="number" [(ngModel)]="maxDam" name="max"></label>
+      <label class="check mt-8">
+        <input class="check__input" type="checkbox" [(ngModel)]="multiTarget" name="mt" />
+        <span class="check__label">Multi-target</span>
+      </label>
+    </div>
+
+    <!-- Standard spell fields -->
+    <div *ngIf="type === 'Standard'" class="grid grid-3">
+      <label class="field">
+        <span class="field__label">Cost</span>
+        <input class="field__input" type="number" [(ngModel)]="cost" name="cost" />
+      </label>
+      <label class="field">
+        <span class="field__label">Min</span>
+        <input class="field__input" type="number" [(ngModel)]="minDam" name="min" />
+      </label>
+      <label class="field">
+        <span class="field__label">Max</span>
+        <input class="field__input" type="number" [(ngModel)]="maxDam" name="max" />
+      </label>
+    </div>
+
+    <!-- Multiplier spell fields -->
+    <div *ngIf="type === 'Multiplier'" class="grid">
+      <label class="field">
+        <span class="field__label">Damage per Pip</span>
+        <input class="field__input" type="number" [(ngModel)]="multiplier" name="mult" />
+      </label>
+    </div>
+
+    <!-- Percent Buff spell fields -->
+    <div *ngIf="type === 'Percent Buff'" class="grid grid-2">
+      <label class="field">
+        <span class="field__label">Cost</span>
+        <input class="field__input" type="number" [(ngModel)]="cost" name="pcost" />
+      </label>
+      <label class="field">
+        <span class="field__label">Damage increase (%)</span>
+        <input class="field__input" type="number" [(ngModel)]="percent" name="percent" />
+      </label>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-primary btn-block" (click)="save()">Save</button>
+    </div>
   </div>
-
-<!-- Spells that do damage based on number of pips you have -->
-  <div *ngIf="type==='Multiplier'">
-    <label>Damage per Pip <input type="number" [(ngModel)]="multiplier" name="mult"></label>
-  </div>
-
-<!-- Spells that buff your next attack by a percentage -->
-  <div *ngIf="type==='Percent Buff'" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
-    <label>Cost <input type="number" [(ngModel)]="cost" name="pcost"></label>
-    <label>Percent % <input type="number" [(ngModel)]="percent" name="percent"></label>
-  </div>
-
-  <button class="btn" (click)="save()">Save</button>
 </section>
